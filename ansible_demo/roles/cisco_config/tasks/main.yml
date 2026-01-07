@@ -1,0 +1,75 @@
+---
+- name: Gather IOS facts
+  cisco.ios.ios_facts:
+    gather_subset: all
+  register: device_facts
+
+- name: Display device information
+  ansible.builtin.debug:
+    msg: "Configuring device: {{ ansible_net_hostname | default(inventory_hostname) }}"
+
+- name: Backup configuration before changes
+  cisco.ios.ios_config:
+    backup: yes
+    backup_options:
+      filename: "{{ inventory_hostname }}_pre_config_{{ ansible_date_time.epoch }}.cfg"
+  register: pre_config_backup
+  when: backup_before_change | default(true) | bool
+
+- name: Save pre-configuration backup locally
+  ansible.builtin.copy:
+    src: "{{ pre_config_backup.backup_path }}"
+    dest: "{{ backup_dest_dir | default('backups') }}/{{ inventory_hostname }}_pre_config_{{ ansible_date_time.date }}.txt"
+  delegate_to: localhost
+  when: backup_before_change | default(true) | bool
+
+- name: Apply configuration from template
+  cisco.ios.ios_config:
+    src: "{{ config_template }}"
+  when: config_template is defined
+  notify: config_applied
+
+- name: Apply configuration lines
+  cisco.ios.ios_config:
+    lines: "{{ item }}"
+  loop: "{{ config_lines | default([]) }}"
+  when: config_lines is defined and config_lines | length > 0
+  notify: config_applied
+
+- name: Apply interface configurations
+  cisco.ios.ios_config:
+    parents: "interface {{ item.name }}"
+    lines: "{{ item.config }}"
+  loop: "{{ interface_configs | default([]) }}"
+  when: interface_configs is defined
+  notify: config_applied
+
+- name: Validate configuration
+  cisco.ios.ios_command:
+    commands:
+      - show running-config
+  register: running_config
+  when: validate_config | default(true) | bool
+
+- name: Save post-configuration backup
+  cisco.ios.ios_config:
+    backup: yes
+    backup_options:
+      filename: "{{ inventory_hostname }}_post_config_{{ ansible_date_time.epoch }}.cfg"
+  register: post_config_backup
+  when: backup_after_change | default(true) | bool
+
+- name: Save post-configuration backup locally
+  ansible.builtin.copy:
+    src: "{{ post_config_backup.backup_path }}"
+    dest: "{{ backup_dest_dir | default('backups') }}/{{ inventory_hostname }}_post_config_{{ ansible_date_time.date }}.txt"
+  delegate_to: localhost
+  when: backup_after_change | default(true) | bool
+
+- name: Generate configuration report
+  ansible.builtin.template:
+    src: config_report.j2
+    dest: "{{ backup_dest_dir | default('backups') }}/{{ inventory_hostname }}_config_report_{{ ansible_date_time.date }}.txt"
+  delegate_to: localhost
+  when: generate_report | default(true) | bool
+

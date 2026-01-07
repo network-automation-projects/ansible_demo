@@ -1,0 +1,10 @@
+---
+# Variables for cisco_backup role
+# These can be overridden in playbooks or group_vars
+
+# Backup destination directory
+backup_dest_dir: backups
+
+# Whether to generate backup report
+generate_report: true
+

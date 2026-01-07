@@ -1,0 +1,139 @@
+---
+- name: Network Device Compliance Check
+  hosts: cisco_devices
+  gather_facts: no
+  vars:
+    compliance_report_dir: "logs/compliance_reports"
+    compliance_failures: []
+  tasks:
+    - name: Create compliance report directory
+      ansible.builtin.file:
+        path: "{{ compliance_report_dir }}"
+        state: directory
+      delegate_to: localhost
+      run_once: true
+
+    - name: Gather device facts
+      cisco.ios.ios_facts:
+        gather_subset: all
+      register: device_facts
+
+    - name: Check SNMP configuration
+      cisco.ios.ios_command:
+        commands:
+          - show snmp community
+          - show snmp user
+      register: snmp_config
+      ignore_errors: true
+
+    - name: Check for default SNMP community strings
+      ansible.builtin.set_fact:
+        compliance_failures: "{{ compliance_failures + ['Default SNMP community strings found'] }}"
+      when: "'public' in snmp_config.stdout | default('') or 'private' in snmp_config.stdout | default('')"
+
+    - name: Check logging configuration
+      cisco.ios.ios_command:
+        commands:
+          - show logging
+      register: logging_config
+      ignore_errors: true
+
+    - name: Check if logging is enabled
+      ansible.builtin.set_fact:
+        compliance_failures: "{{ compliance_failures + ['Logging not properly configured'] }}"
+      when: "'Logging to' not in logging_config.stdout | default('')"
+
+    - name: Check password encryption
+      cisco.ios.ios_command:
+        commands:
+          - show running-config | section "enable"
+      register: password_config
+      ignore_errors: true
+
+    - name: Check for plaintext passwords
+      ansible.builtin.set_fact:
+        compliance_failures: "{{ compliance_failures + ['Plaintext passwords detected'] }}"
+      when: "'password' in password_config.stdout | default('') and 'secret' not in password_config.stdout | default('')"
+
+    - name: Check SSH configuration
+      cisco.ios.ios_command:
+        commands:
+          - show ip ssh
+      register: ssh_config
+      ignore_errors: true
+
+    - name: Check if SSH is enabled
+      ansible.builtin.set_fact:
+        compliance_failures: "{{ compliance_failures + ['SSH not enabled or misconfigured'] }}"
+      when: "'SSH' not in ssh_config.stdout | default('') or 'not running' in ssh_config.stdout | default('')"
+
+    - name: Check NTP configuration
+      cisco.ios.ios_command:
+        commands:
+          - show ntp status
+          - show ntp associations
+      register: ntp_config
+      ignore_errors: true
+
+    - name: Check if NTP is synchronized
+      ansible.builtin.set_fact:
+        compliance_failures: "{{ compliance_failures + ['NTP not synchronized'] }}"
+      when: "'synchronised' not in ntp_config.stdout | default('') and 'synchronized' not in ntp_config.stdout | default('')"
+
+    - name: Check for unused interfaces
+      cisco.ios.ios_command:
+        commands:
+          - show ip interface brief
+      register: interface_status
+
+    - name: Check interface security
+      cisco.ios.ios_command:
+        commands:
+          - show running-config | section "interface"
+      register: interface_config
+      ignore_errors: true
+
+    - name: Generate compliance report
+      ansible.builtin.copy:
+        content: |
+          Compliance Check Report
+          ======================
+          Device: {{ ansible_net_hostname | default(inventory_hostname) }}
+          Date: {{ ansible_date_time.iso8601 }}
+          
+          Compliance Checks:
+          ------------------
+          {% if compliance_failures | length > 0 %}
+          FAILURES DETECTED:
+          {% for failure in compliance_failures %}
+          - {{ failure }}
+          {% endfor %}
+          {% else %}
+          ✓ All compliance checks passed
+          {% endif %}
+          
+          Device Information:
+          -------------------
+          Hostname: {{ ansible_net_hostname | default('N/A') }}
+          Model: {{ ansible_net_model | default('N/A') }}
+          OS Version: {{ ansible_net_version | default('N/A') }}
+          
+          SNMP Status: {{ 'Configured' if snmp_config is defined else 'Not checked' }}
+          Logging Status: {{ 'Configured' if logging_config is defined else 'Not checked' }}
+          SSH Status: {{ 'Enabled' if ssh_config is defined and 'not running' not in ssh_config.stdout | default('') else 'Not enabled' }}
+          NTP Status: {{ 'Synchronized' if ntp_config is defined and 'synchronised' in ntp_config.stdout | default('') else 'Not synchronized' }}
+        dest: "{{ compliance_report_dir }}/{{ inventory_hostname }}_compliance_{{ ansible_date_time.date }}.txt"
+      delegate_to: localhost
+
+    - name: Display compliance summary
+      ansible.builtin.debug:
+        msg:
+          - "Compliance check completed for {{ inventory_hostname }}"
+          - "Failures: {{ compliance_failures | length }}"
+          - "Report saved to {{ compliance_report_dir }}/{{ inventory_hostname }}_compliance_{{ ansible_date_time.date }}.txt"
+
+    - name: Fail if compliance issues found
+      ansible.builtin.fail:
+        msg: "Compliance check failed. See report for details."
+      when: compliance_failures | length > 0
+

@@ -1,0 +1,13 @@
+---
+# Default variables for cisco_backup role
+# These are the defaults and can be overridden
+
+# Backup destination directory
+backup_dest_dir: backups
+
+# Whether to generate backup report
+generate_report: true
+
+# Backup file naming format
+backup_filename_format: "{{ inventory_hostname }}_running_config_{{ ansible_date_time.date }}_{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}.txt"
+

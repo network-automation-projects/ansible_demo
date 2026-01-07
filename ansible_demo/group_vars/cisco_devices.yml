@@ -1,0 +1,44 @@
+---
+# Group variables for cisco_devices group
+# These variables apply to all devices in the cisco_devices group
+
+# Connection settings
+ansible_connection: ansible.netcommon.network_cli
+ansible_network_os: ios
+ansible_become: yes
+ansible_become_method: enable
+
+# SSH settings
+ansible_ssh_common_args: '-o StrictHostKeyChecking=no'
+
+# Timeout settings (increased for sandbox connections)
+ansible_command_timeout: 60
+ansible_persistent_connect_timeout: 60
+ansible_persistent_command_timeout: 60
+# Connection retry settings for flaky sandboxes
+ansible_persistent_connect_retry_timeout: 30
+
+# Backup settings
+backup_dest_dir: backups
+backup_before_change: true
+backup_after_change: true
+
+# Compliance settings
+compliance_enabled: true
+compliance_report_dir: logs/compliance_reports
+
+# Logging settings
+log_path: logs/ansible.log
+
+# Device-specific defaults
+ntp_servers:
+  - "pool.ntp.org"
+  - "time.nist.gov"
+
+syslog_servers:
+  - "192.168.1.100"
+
+# SNMP settings (example - use vault for actual community strings)
+snmp_ro_community: "{{ vault_snmp_ro_community | default('public') }}"
+snmp_rw_community: "{{ vault_snmp_rw_community | default('private') }}"
+

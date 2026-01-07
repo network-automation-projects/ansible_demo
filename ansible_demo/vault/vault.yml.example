@@ -1,0 +1,48 @@
+---
+# Example Ansible Vault file
+# This file demonstrates the structure for encrypted credentials
+# 
+# To create an encrypted vault file, run:
+#   ansible-vault create vault/vault.yml
+#
+# To edit an encrypted vault file, run:
+#   ansible-vault edit vault/vault.yml
+#
+# To view an encrypted vault file, run:
+#   ansible-vault view vault/vault.yml
+#
+# To encrypt an existing file, run:
+#   ansible-vault encrypt vault/vault.yml
+#
+# To decrypt a vault file, run:
+#   ansible-vault decrypt vault/vault.yml
+
+# Device credentials
+vault_username: your_username_here
+vault_password: your_password_here
+vault_enable_password: your_enable_password_here
+
+# SNMP credentials
+vault_snmp_ro_community: your_readonly_community_here
+vault_snmp_rw_community: your_readwrite_community_here
+
+# API keys (if needed)
+vault_api_key: your_api_key_here
+
+# Other sensitive data
+vault_secret_key: your_secret_key_here
+
+# Usage in playbooks:
+#   ansible_user: "{{ vault_username }}"
+#   ansible_password: "{{ vault_password }}"
+#   ansible_become_password: "{{ vault_enable_password }}"
+#
+# Usage in inventory:
+#   ansible_user: "{{ vault_username }}"
+#   ansible_password: "{{ vault_password }}"
+#
+# To use vault variables in playbooks, reference the vault file:
+#   ansible-playbook playbook.yml --ask-vault-pass
+#   OR
+#   ansible-playbook playbook.yml --vault-password-file ~/.vault_pass
+

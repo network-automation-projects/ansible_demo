@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+ENV/
+env/
+
+# Ansible
+*.retry
+.vault_pass
+vault_pass.txt
+*.vault
+!vault/*.example
+
+# Logs
+logs/*.log
+*.log
+
+# Backups
+backups/*.txt
+backups/*.cfg
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Sensitive files
+secrets/
+*.key
+*.pem
+*.crt
+
+# Ansible fact cache
+fact_cache/
+
+# Temporary files
+*.tmp
+*.bak
+

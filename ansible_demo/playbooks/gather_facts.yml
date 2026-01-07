@@ -1,0 +1,81 @@
+---
+- name: Gather Comprehensive Device Facts and Information
+  hosts: cisco_devices
+  gather_facts: no
+  vars:
+    output_dir: "logs/device_facts"
+  tasks:
+    - name: Create output directory
+      ansible.builtin.file:
+        path: "{{ output_dir }}"
+        state: directory
+      delegate_to: localhost
+      run_once: true
+
+    - name: Gather IOS facts (comprehensive)
+      cisco.ios.ios_facts:
+        gather_subset:
+          - all
+          - hardware
+          - interfaces
+          - default
+      register: device_facts
+
+    - name: Display device summary
+      ansible.builtin.debug:
+        msg:
+          - "Device: {{ ansible_net_hostname }}"
+          - "Model: {{ ansible_net_model }}"
+          - "OS Version: {{ ansible_net_version }}"
+          - "Serial Number: {{ ansible_net_serialnum }}"
+          - "Uptime: {{ ansible_net_uptime_seconds | int // 86400 }} days"
+
+    - name: Gather interface information
+      cisco.ios.ios_command:
+        commands:
+          - show ip interface brief
+          - show interfaces status
+      register: interface_info
+
+    - name: Display interface summary
+      ansible.builtin.debug:
+        msg: "{{ interface_info.stdout_lines[0] }}"
+
+    - name: Gather routing information
+      cisco.ios.ios_command:
+        commands:
+          - show ip route summary
+          - show ip route
+      register: routing_info
+      when: ansible_net_hostname is defined
+
+    - name: Gather VLAN information (if switch)
+      cisco.ios.ios_command:
+        commands:
+          - show vlan brief
+      register: vlan_info
+      ignore_errors: true
+
+    - name: Save device facts to file
+      ansible.builtin.copy:
+        content: |
+          Device Information Report
+          ========================
+          Hostname: {{ ansible_net_hostname }}
+          Model: {{ ansible_net_model }}
+          OS Version: {{ ansible_net_version }}
+          Serial Number: {{ ansible_net_serialnum }}
+          Uptime: {{ ansible_net_uptime_seconds | int // 86400 }} days
+          
+          Interfaces:
+          {{ interface_info.stdout_lines[0] | join('\n') }}
+          
+          Routing Summary:
+          {{ routing_info.stdout_lines[0] | join('\n') if routing_info is defined else 'N/A' }}
+        dest: "{{ output_dir }}/{{ inventory_hostname }}_facts_{{ ansible_date_time.date }}.txt"
+      delegate_to: localhost
+
+    - name: Display completion message
+      ansible.builtin.debug:
+        msg: "Device facts saved to {{ output_dir }}/{{ inventory_hostname }}_facts_{{ ansible_date_time.date }}.txt"
+

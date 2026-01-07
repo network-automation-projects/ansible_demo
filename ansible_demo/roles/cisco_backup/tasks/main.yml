@@ -1,0 +1,37 @@
+---
+- name: Gather IOS facts
+  cisco.ios.ios_facts:
+    gather_subset: all
+  register: device_facts
+
+- name: Display device information
+  ansible.builtin.debug:
+    msg: "Backing up device: {{ ansible_net_hostname | default(inventory_hostname) }}"
+
+- name: Backup running configuration
+  cisco.ios.ios_config:
+    backup: yes
+    backup_options:
+      filename: "{{ inventory_hostname }}_running_config_{{ ansible_date_time.epoch }}.cfg"
+  register: backup_result
+
+- name: Create local backups directory
+  ansible.builtin.file:
+    path: "{{ backup_dest_dir | default('backups') }}"
+    state: directory
+  delegate_to: localhost
+
+- name: Save backup to local directory
+  ansible.builtin.copy:
+    src: "{{ backup_result.backup_path }}"
+    dest: "{{ backup_dest_dir | default('backups') }}/{{ inventory_hostname }}_running_config_{{ ansible_date_time.date }}_{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}.txt"
+  delegate_to: localhost
+  notify: backup_completed
+
+- name: Generate backup report
+  ansible.builtin.template:
+    src: backup_report.j2
+    dest: "{{ backup_dest_dir | default('backups') }}/{{ inventory_hostname }}_backup_report_{{ ansible_date_time.date }}.txt"
+  delegate_to: localhost
+  when: generate_report | default(true) | bool
+

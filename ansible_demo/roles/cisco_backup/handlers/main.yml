@@ -1,0 +1,5 @@
+---
+- name: backup_completed
+  ansible.builtin.debug:
+    msg: "Backup completed successfully for {{ inventory_hostname }}"
+

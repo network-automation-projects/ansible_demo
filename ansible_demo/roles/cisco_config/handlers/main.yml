@@ -1,0 +1,5 @@
+---
+- name: config_applied
+  ansible.builtin.debug:
+    msg: "Configuration applied successfully to {{ inventory_hostname }}"
+

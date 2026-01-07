@@ -1,0 +1,23 @@
+Backup Report
+=============
+Device: {{ ansible_net_hostname | default(inventory_hostname) }}
+Date: {{ ansible_date_time.iso8601 }}
+
+Device Information:
+-------------------
+Hostname: {{ ansible_net_hostname | default('N/A') }}
+Model: {{ ansible_net_model | default('N/A') }}
+OS Version: {{ ansible_net_version | default('N/A') }}
+Serial Number: {{ ansible_net_serialnum | default('N/A') }}
+
+Backup Details:
+---------------
+Backup File: {{ inventory_hostname }}_running_config_{{ ansible_date_time.date }}_{{ ansible_date_time.hour }}{{ ansible_date_time.minute }}.txt
+Backup Location: {{ backup_dest_dir | default('backups') }}
+Status: Success
+
+Additional Information:
+-----------------------
+Uptime: {{ ansible_net_uptime_seconds | default(0) | int // 86400 }} days
+Interfaces: {{ ansible_net_interfaces | default({}) | length }}
+

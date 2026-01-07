@@ -1,0 +1,38 @@
+Device Information Report
+==========================
+Generated: {{ ansible_date_time.iso8601 }}
+Device: {{ ansible_net_hostname | default(inventory_hostname) }}
+
+Device Details:
+---------------
+Hostname: {{ ansible_net_hostname | default('N/A') }}
+Model: {{ ansible_net_model | default('N/A') }}
+OS Version: {{ ansible_net_version | default('N/A') }}
+Serial Number: {{ ansible_net_serialnum | default('N/A') }}
+Uptime: {{ ansible_net_uptime_seconds | default(0) | int // 86400 }} days
+
+Network Information:
+--------------------
+{% if ansible_net_interfaces is defined %}
+Interfaces:
+{% for interface_name, interface_data in ansible_net_interfaces.items() %}
+- {{ interface_name }}: {{ interface_data.get('ipv4', [{}])[0].get('address', 'N/A') }}
+{% endfor %}
+{% else %}
+No interface information available
+{% endif %}
+
+{% if ansible_net_neighbors is defined %}
+Neighbors:
+{% for neighbor in ansible_net_neighbors %}
+- {{ neighbor }}
+{% endfor %}
+{% endif %}
+
+Configuration Summary:
+----------------------
+Total Interfaces: {{ ansible_net_interfaces | default({}) | length }}
+{% if ansible_net_all_ipv4_addresses is defined %}
+IPv4 Addresses: {{ ansible_net_all_ipv4_addresses | length }}
+{% endif %}
+

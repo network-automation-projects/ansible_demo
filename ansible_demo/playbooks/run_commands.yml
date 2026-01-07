@@ -1,0 +1,64 @@
+---
+- name: Run Custom Show Commands on Cisco Devices
+  hosts: cisco_devices
+  gather_facts: no
+  vars:
+    commands: []
+    save_output: false
+    output_dir: "logs/command_output"
+  tasks:
+    - name: Validate commands are provided
+      ansible.builtin.assert:
+        that:
+          - commands | length > 0
+        fail_msg: "No commands provided. Use -e 'commands=[\"show version\",\"show ip route\"]'"
+        success_msg: "Commands validated"
+
+    - name: Create output directory
+      ansible.builtin.file:
+        path: "{{ output_dir }}"
+        state: directory
+      delegate_to: localhost
+      run_once: true
+      when: save_output | bool
+
+    - name: Run show commands
+      cisco.ios.ios_command:
+        commands: "{{ commands }}"
+      register: command_output
+
+    - name: Display command output
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop: "{{ command_output.stdout_lines }}"
+      loop_control:
+        label: "Command output"
+
+    - name: Save command output to file
+      ansible.builtin.copy:
+        content: |
+          Command Output Report
+          ======================
+          Device: {{ inventory_hostname }}
+          Date: {{ ansible_date_time.iso8601 }}
+          
+          Commands Executed:
+          {% for cmd in commands %}
+          - {{ cmd }}
+          {% endfor %}
+          
+          Output:
+          -------
+          {% for output in command_output.stdout_lines %}
+          {{ output | join('\n') }}
+          
+          {% endfor %}
+        dest: "{{ output_dir }}/{{ inventory_hostname }}_commands_{{ ansible_date_time.epoch }}.txt"
+      delegate_to: localhost
+      when: save_output | bool
+
+    - name: Display completion message
+      ansible.builtin.debug:
+        msg: "Commands executed successfully on {{ inventory_hostname }}"
+      when: save_output | bool
+

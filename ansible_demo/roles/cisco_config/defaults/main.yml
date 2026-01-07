@@ -1,0 +1,19 @@
+---
+# Default variables for cisco_config role
+# These are the defaults and can be overridden
+
+# Backup destination directory
+backup_dest_dir: backups
+
+# Whether to backup before changes
+backup_before_change: true
+
+# Whether to backup after changes
+backup_after_change: true
+
+# Whether to validate configuration
+validate_config: true
+
+# Whether to generate configuration report
+generate_report: true
+

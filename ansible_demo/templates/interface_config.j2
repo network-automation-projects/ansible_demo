@@ -1,0 +1,27 @@
+! Interface Configuration Template
+! Generated: {{ ansible_date_time.iso8601 }}
+! Device: {{ inventory_hostname }}
+
+{% for interface in interfaces %}
+interface {{ interface.name }}
+ description {{ interface.description }}
+{% if interface.ip_address is defined %}
+ ip address {{ interface.ip_address }} {{ interface.subnet }}
+{% endif %}
+{% if interface.enabled | default(true) %}
+ no shutdown
+{% else %}
+ shutdown
+{% endif %}
+{% if interface.vlan is defined %}
+ switchport access vlan {{ interface.vlan }}
+{% endif %}
+{% if interface.speed is defined %}
+ speed {{ interface.speed }}
+{% endif %}
+{% if interface.duplex is defined %}
+ duplex {{ interface.duplex }}
+{% endif %}
+!
+{% endfor %}
+

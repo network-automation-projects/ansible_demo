@@ -1,0 +1,38 @@
+Configuration Report
+====================
+Device: {{ ansible_net_hostname | default(inventory_hostname) }}
+Date: {{ ansible_date_time.iso8601 }}
+
+Device Information:
+-------------------
+Hostname: {{ ansible_net_hostname | default('N/A') }}
+Model: {{ ansible_net_model | default('N/A') }}
+OS Version: {{ ansible_net_version | default('N/A') }}
+
+Configuration Details:
+---------------------
+{% if config_template is defined %}
+Template Used: {{ config_template }}
+{% endif %}
+
+{% if config_lines is defined %}
+Configuration Lines Applied:
+{% for line in config_lines %}
+- {{ line }}
+{% endfor %}
+{% endif %}
+
+{% if interface_configs is defined %}
+Interface Configurations:
+{% for intf in interface_configs %}
+Interface: {{ intf.name }}
+  Config: {{ intf.config | join(', ') }}
+{% endfor %}
+{% endif %}
+
+Backup Information:
+-------------------
+Pre-configuration backup: {{ inventory_hostname }}_pre_config_{{ ansible_date_time.date }}.txt
+Post-configuration backup: {{ inventory_hostname }}_post_config_{{ ansible_date_time.date }}.txt
+Status: Success
+

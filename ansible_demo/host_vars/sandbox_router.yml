@@ -1,0 +1,30 @@
+---
+# Host-specific variables for sandbox_router
+# These variables override group_vars for this specific host
+
+# Device identification
+device_location: "Sandbox Lab"
+device_purpose: "Learning and Testing"
+
+# Custom backup settings for this host
+backup_dest_dir: backups/sandbox
+backup_retention_days: 30
+
+# Custom configuration settings
+custom_hostname: "sandbox-router"
+domain_name: "lab.local"
+
+# Interface configurations (example)
+interface_configs:
+  - name: GigabitEthernet0/0
+    description: "Management Interface"
+    ip_address: "10.10.20.50"
+    subnet: "255.255.255.0"
+    enabled: true
+
+# Custom commands to run during fact gathering
+custom_show_commands:
+  - "show ip route"
+  - "show ip interface brief"
+  - "show version"
+

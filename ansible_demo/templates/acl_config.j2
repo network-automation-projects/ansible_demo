@@ -1,0 +1,12 @@
+! ACL Configuration Template
+! Generated: {{ ansible_date_time.iso8601 }}
+! Device: {{ inventory_hostname }}
+
+{% if acl_name is defined %}
+ip access-list {{ acl_type | default('extended') }} {{ acl_name }}
+{% for rule in acl_rules %}
+ {{ rule.action }} {{ rule.protocol }} {{ rule.source }} {{ rule.destination }} {{ rule.port | default('') }}
+{% endfor %}
+!
+{% endif %}
+

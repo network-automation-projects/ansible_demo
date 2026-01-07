@@ -1,0 +1,76 @@
+---
+- name: Configure Cisco Device
+  hosts: cisco_devices
+  gather_facts: no
+  vars:
+    config_changes: []
+    backup_before_change: true
+  tasks:
+    - name: Backup configuration before changes
+      cisco.ios.ios_config:
+        backup: yes
+        backup_options:
+          filename: "{{ inventory_hostname }}_pre_change_{{ ansible_date_time.epoch }}.cfg"
+      register: pre_backup
+      when: backup_before_change | bool
+
+    - name: Save pre-change backup locally
+      ansible.builtin.copy:
+        src: "{{ pre_backup.backup_path }}"
+        dest: "backups/{{ inventory_hostname }}_pre_change_{{ ansible_date_time.date }}.txt"
+      delegate_to: localhost
+      when: backup_before_change | bool
+
+    - name: Apply configuration from template
+      cisco.ios.ios_config:
+        lines:
+          - "{{ item }}"
+      loop: "{{ config_changes }}"
+      when: config_changes | length > 0
+
+    - name: Apply interface configuration (example)
+      cisco.ios.ios_config:
+        parents: "interface {{ item.interface }}"
+        lines:
+          - "description {{ item.description }}"
+          - "ip address {{ item.ip_address }} {{ item.subnet }}"
+          - "no shutdown"
+      loop: "{{ interface_configs | default([]) }}"
+      when: interface_configs is defined
+
+    - name: Apply ACL configuration (example)
+      cisco.ios.ios_config:
+        parents: "ip access-list extended {{ acl_name | default('CUSTOM_ACL') }}"
+        lines: "{{ acl_lines | default([]) }}"
+      when: acl_lines is defined
+
+    - name: Validate configuration
+      cisco.ios.ios_command:
+        commands:
+          - show running-config | section "{{ item }}"
+      loop: "{{ validation_sections | default(['interface']) }}"
+      register: config_validation
+      when: validation_sections is defined
+
+    - name: Display configuration validation
+      ansible.builtin.debug:
+        msg: "{{ config_validation.stdout_lines }}"
+      when: config_validation is defined
+
+    - name: Save running configuration after changes
+      cisco.ios.ios_config:
+        backup: yes
+        backup_options:
+          filename: "{{ inventory_hostname }}_post_change_{{ ansible_date_time.epoch }}.cfg"
+      register: post_backup
+
+    - name: Save post-change backup locally
+      ansible.builtin.copy:
+        src: "{{ post_backup.backup_path }}"
+        dest: "backups/{{ inventory_hostname }}_post_change_{{ ansible_date_time.date }}.txt"
+      delegate_to: localhost
+
+    - name: Display completion message
+      ansible.builtin.debug:
+        msg: "Configuration changes applied to {{ inventory_hostname }}. Backups saved to backups/ directory."
+

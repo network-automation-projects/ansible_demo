@@ -1,0 +1,79 @@
+---
+- name: Backup Cisco Device Configurations and Gather Info
+  hosts: cisco_devices
+  gather_facts: no
+  tasks:
+    - name: Test basic connectivity with ping
+      ansible.builtin.ping:
+      register: ping_result
+      ignore_errors: yes
+
+    - name: Display connectivity test result
+      ansible.builtin.debug:
+        msg: "Connectivity test: {{ 'SUCCESS' if ping_result is succeeded else 'FAILED - Check sandbox status and credentials' }}"
+
+    - block:
+        - name: Gather IOS facts (hostname, version, interfaces, etc.)
+          cisco.ios.ios_facts:
+            gather_subset: all
+          vars:
+            ansible_command_timeout: 60
+
+        - name: Display hostname and OS version
+          ansible.builtin.debug:
+            msg: "Device: {{ ansible_net_hostname }} | OS: {{ ansible_net_version }}"
+
+        - name: Run show commands for verification
+          cisco.ios.ios_command:
+            commands:
+              - show ip interface brief
+              - show version
+          register: show_output
+
+        - name: Display show ip interface brief
+          ansible.builtin.debug:
+            msg: "{{ show_output.stdout_lines[0] }}"
+
+        - name: Backup running configuration
+          cisco.ios.ios_config:
+            backup: yes
+          register: backup_result
+
+        - name: Save backup to local backups folder
+          ansible.builtin.copy:
+            src: "{{ backup_result.backup_path }}"
+            dest: "backups/{{ inventory_hostname }}_running_config_{{ ansible_date_time.date }}.txt"
+          delegate_to: localhost
+
+        - name: Log success
+          ansible.builtin.debug:
+            msg: "Backup saved for {{ inventory_hostname }} to backups/"
+
+      rescue:
+        - name: Display friendly error message
+          ansible.builtin.debug:
+            msg: |
+              ⚠️  Unable to connect to Cisco sandbox
+              
+              Common causes:
+              • Sandbox is inactive or down (check DevNet portal)
+              • Wrong SSH port (many sandboxes use 8181, 2222, not 22)
+              • Network/firewall blocking connection
+              • VPN interfering with connection
+              
+              Quick checks:
+              1. Verify sandbox status on DevNet portal
+              2. Test SSH manually: ssh developer@10.10.20.50 -p <port>
+              3. Check if port 22 is correct in inventories/hosts.yml
+              4. Try disabling VPN or switching networks
+              
+              See README.md troubleshooting section for more details.
+
+        - name: Set connection failed flag
+          ansible.builtin.set_fact:
+            connection_failed: true
+
+      always:
+        - name: Display final status
+          ansible.builtin.debug:
+            msg: "{{ 'Connection successful' if connection_failed is not defined else 'Connection failed - see message above' }}"

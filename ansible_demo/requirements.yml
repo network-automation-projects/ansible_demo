@@ -1,0 +1,8 @@
+# Ansible Collections
+# Install with: ansible-galaxy collection install -r requirements.yml
+collections:
+  - name: cisco.ios
+    version: ">=2.0.0"
+  - name: ansible.netcommon
+    version: ">=2.0.0"
+
