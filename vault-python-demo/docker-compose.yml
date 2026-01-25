@@ -1,0 +1,90 @@
+version: '3.8'
+
+services:
+  vault-server:
+    image: hashicorp/vault:latest
+    container_name: lab_vault-server_1
+    ports:
+      - "8200:8200"
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: "myroot"
+      VAULT_DEV_LISTEN_ADDRESS: "0.0.0.0:8200"
+      VAULT_ADDR: "http://127.0.0.1:8200"
+      APPROLE_ROLE_ID: "demo-web-app"
+      ORCHESTRATOR_TOKEN: "orchestrator-token-12345"
+    volumes:
+      - ./vault/config:/vault/config
+      - ./scripts:/vault/scripts
+      - trusted-orchestrator-volume:/tmp
+    cap_add:
+      - IPC_LOCK
+    command: vault server -dev -dev-root-token-id=myroot
+    networks:
+      - vault-network
+
+  orchestrator:
+    build:
+      context: ./orchestrator
+      dockerfile: Dockerfile
+    container_name: lab_orchestrator_1
+    environment:
+      VAULT_ADDRESS: "http://vault-server:8200"
+      ORCHESTRATOR_TOKEN: "orchestrator-token-12345"
+      VAULT_APPROLE_ROLE: "dev-role"
+    volumes:
+      - trusted-orchestrator-volume:/tmp
+    depends_on:
+      - vault-server
+    networks:
+      - vault-network
+    restart: unless-stopped
+
+  app:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+    container_name: lab_app_1
+    environment:
+      VAULT_ADDRESS: "http://vault-server:8200"
+      VAULT_APPROLE_ROLE_ID: "demo-web-app"
+      VAULT_APPROLE_SECRET_ID_FILE: "/tmp/secret"
+      VAULT_API_KEY_PATH: "api-key"
+      VAULT_API_KEY_FIELD: "api-key-descriptor"
+      SECURE_SERVICE_ENDPOINT: "http://secure-service:8080/api"
+    volumes:
+      - trusted-orchestrator-volume:/tmp
+    depends_on:
+      - vault-server
+      - orchestrator
+    networks:
+      - vault-network
+
+  secure-service:
+    image: python:3.9-slim
+    container_name: lab_secure-service_1
+    ports:
+      - "8080:8080"
+    working_dir: /app
+    command: >
+      sh -c "pip install flask && 
+      python -c \"
+      from flask import Flask, request, jsonify
+      app = Flask(__name__)
+      @app.route('/api', methods=['POST'])
+      def api():
+          api_key = request.headers.get('X-API-KEY')
+          if api_key == 'my-secret-key':
+              return jsonify({'message': 'hello world!'}), 200
+          return jsonify({'error': 'Invalid API key'}), 401
+      app.run(host='0.0.0.0', port=8080)
+      \""
+    networks:
+      - vault-network
+
+volumes:
+  trusted-orchestrator-volume:
+
+networks:
+  vault-network:
+    driver: bridge
+

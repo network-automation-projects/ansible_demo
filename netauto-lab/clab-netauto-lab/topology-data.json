@@ -1,0 +1,164 @@
+{
+  "name": "netauto-lab",
+  "type": "clab",
+  "clab": {
+    "config": {
+      "prefix": "clab",
+      "mgmt": {
+        "network": "clab",
+        "bridge": "br-89065e0c01bb",
+        "ipv4-subnet": "172.20.20.0/24",
+        "ipv4-gw": "172.20.20.1",
+        "ipv6-subnet": "3fff:172:20:20::/64",
+        "ipv6-gw": "3fff:172:20:20::1",
+        "external-access": true
+      }
+    }
+  },
+  "ssh-pub-keys": [],
+  "nodes": {
+    "router1": {
+      "index": "0",
+      "shortname": "router1",
+      "longname": "clab-netauto-lab-router1",
+      "fqdn": "router1.netauto-lab.io",
+      "group": "",
+      "labdir": "/workspace/clab-netauto-lab/router1",
+      "kind": "srl",
+      "image": "ghcr.io/nokia/srlinux:latest",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "",
+      "mgmt-ipv4-prefix-length": 0,
+      "mgmt-ipv6-address": "",
+      "mgmt-ipv6-prefix-length": 0,
+      "mac-address": "1a:33:00:00:00:00",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-89065e0c01bb",
+        "clab-node-group": "",
+        "clab-node-kind": "srl",
+        "clab-node-lab-dir": "/workspace/clab-netauto-lab/router1",
+        "clab-node-longname": "clab-netauto-lab-router1",
+        "clab-node-name": "router1",
+        "clab-node-type": "ixr-d2l",
+        "clab-owner": "",
+        "clab-topo-file": "/workspace/lab.clab.yml",
+        "containerlab": "netauto-lab"
+      },
+      "port-bindings": [
+      ]
+    },
+    "router2": {
+      "index": "1",
+      "shortname": "router2",
+      "longname": "clab-netauto-lab-router2",
+      "fqdn": "router2.netauto-lab.io",
+      "group": "",
+      "labdir": "/workspace/clab-netauto-lab/router2",
+      "kind": "srl",
+      "image": "ghcr.io/nokia/srlinux:latest",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "",
+      "mgmt-ipv4-prefix-length": 0,
+      "mgmt-ipv6-address": "",
+      "mgmt-ipv6-prefix-length": 0,
+      "mac-address": "1a:c1:01:00:00:00",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-89065e0c01bb",
+        "clab-node-group": "",
+        "clab-node-kind": "srl",
+        "clab-node-lab-dir": "/workspace/clab-netauto-lab/router2",
+        "clab-node-longname": "clab-netauto-lab-router2",
+        "clab-node-name": "router2",
+        "clab-node-type": "ixr-d2l",
+        "clab-owner": "",
+        "clab-topo-file": "/workspace/lab.clab.yml",
+        "containerlab": "netauto-lab"
+      },
+      "port-bindings": [
+      ]
+    },
+    "router3": {
+      "index": "2",
+      "shortname": "router3",
+      "longname": "clab-netauto-lab-router3",
+      "fqdn": "router3.netauto-lab.io",
+      "group": "",
+      "labdir": "/workspace/clab-netauto-lab/router3",
+      "kind": "srl",
+      "image": "ghcr.io/nokia/srlinux:latest",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "",
+      "mgmt-ipv4-prefix-length": 0,
+      "mgmt-ipv6-address": "",
+      "mgmt-ipv6-prefix-length": 0,
+      "mac-address": "1a:8b:02:00:00:00",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-89065e0c01bb",
+        "clab-node-group": "",
+        "clab-node-kind": "srl",
+        "clab-node-lab-dir": "/workspace/clab-netauto-lab/router3",
+        "clab-node-longname": "clab-netauto-lab-router3",
+        "clab-node-name": "router3",
+        "clab-node-type": "ixr-d2l",
+        "clab-owner": "",
+        "clab-topo-file": "/workspace/lab.clab.yml",
+        "containerlab": "netauto-lab"
+      },
+      "port-bindings": [
+      ]
+    }
+  },
+  "links": [
+    {
+      "endpoints": {
+        "a": {
+          "node": "router1",
+          "interface": "e1-1",
+          "mac": "aa:c1:ab:10:5c:f1",
+          "peer": "z"
+        },
+        "z": {
+          "node": "router2",
+          "interface": "e1-1",
+          "mac": "aa:c1:ab:51:d2:9f",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "router2",
+          "interface": "e1-2",
+          "mac": "aa:c1:ab:1f:02:ed",
+          "peer": "z"
+        },
+        "z": {
+          "node": "router3",
+          "interface": "e1-1",
+          "mac": "aa:c1:ab:a5:1a:d8",
+          "peer": "a"
+        }
+      }
+    },
+    {
+      "endpoints": {
+        "a": {
+          "node": "router3",
+          "interface": "e1-2",
+          "mac": "aa:c1:ab:3c:b6:18",
+          "peer": "z"
+        },
+        "z": {
+          "node": "router1",
+          "interface": "e1-2",
+          "mac": "aa:c1:ab:cd:93:9a",
+          "peer": "a"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block title %}Devices - Network Automation{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">
+            <i class="bi bi-devices"></i> Device Inventory
+        </h1>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">All Devices</h5>
+                <a href="{{ url_for('index') }}" class="btn btn-sm btn-outline-primary">
+                    <i class="bi bi-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+            <div class="card-body">
+                {% if devices %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Hostname</th>
+                                <th>IP Address</th>
+                                <th>Device Type</th>
+                                <th>Status</th>
+                                <th>Last Seen</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for device in devices %}
+                            <tr>
+                                <td>
+                                    <strong>{{ device.get('hostname', 'N/A') }}</strong>
+                                    {% if device.get('facts') and device.get('facts').get('hostname_from_device') %}
+                                        <br><small class="text-muted">
+                                            Device: {{ device.get('facts').get('hostname_from_device') }}
+                                        </small>
+                                    {% endif %}
+                                </td>
+                                <td><code>{{ device.get('ip', '') }}</code></td>
+                                <td>
+                                    <span class="badge bg-secondary">{{ device.get('device_type', '') }}</span>
+                                </td>
+                                <td>
+                                    {% if device.get('status') == 'reachable' %}
+                                        <span class="badge bg-success">
+                                            <i class="bi bi-check-circle"></i> Reachable
+                                        </span>
+                                    {% elif device.get('status') == 'unreachable' %}
+                                        <span class="badge bg-danger">
+                                            <i class="bi bi-x-circle"></i> Unreachable
+                                        </span>
+                                    {% elif device.get('status') == 'auth_failed' %}
+                                        <span class="badge bg-warning">
+                                            <i class="bi bi-shield-exclamation"></i> Auth Failed
+                                        </span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">
+                                            {{ device.get('status', 'Unknown') }}
+                                        </span>
+                                    {% endif %}
+                                    {% if device.get('error') %}
+                                        <br><small class="text-danger">{{ device.get('error') }}</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if device.get('last_seen') %}
+                                        <small>{{ device.get('last_seen')[:16] }}</small>
+                                    {% else %}
+                                        <small class="text-muted">Never</small>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('device_detail', ip=device.get('ip')) }}" 
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i> Details
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle"></i> No devices found. 
+                    Please add devices to <code>config/devices.yaml</code>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+
+

@@ -1,0 +1,18 @@
+# Example Kubernetes deployment configuration
+name: myapp
+type: kubernetes
+path: ./k8s-manifests
+health_check:
+  endpoint: http://myapp-service.default.svc.cluster.local/health
+  timeout: 30
+  interval: 5
+  retries: 3
+  expected_status: 200
+environments:
+  dev:
+    namespace: myapp-dev
+  staging:
+    namespace: myapp-staging
+  prod:
+    namespace: myapp-prod
+    require_confirmation: true

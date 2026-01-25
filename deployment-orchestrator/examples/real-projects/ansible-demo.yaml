@@ -1,0 +1,27 @@
+# ansible-demo deployment configuration
+name: ansible-demo
+type: ansible
+path: ../ansible_demo
+inventory: inventories/hosts.yml
+ansible_config: ansible.cfg
+playbooks:
+  - name: backup_config
+    file: playbooks/backup_config.yml
+    description: Backup device configurations
+  - name: gather_facts
+    file: playbooks/gather_facts.yml
+    description: Collect device information
+  - name: configure_device
+    file: playbooks/configure_device.yml
+    description: Apply device configurations
+environments:
+  dev:
+    vault_password_file: vault/.dev_password
+    playbook: playbooks/backup_config.yml
+  staging:
+    vault_password_file: vault/.staging_password
+    playbook: playbooks/gather_facts.yml
+  prod:
+    vault_password_file: vault/.prod_password
+    playbook: playbooks/configure_device.yml
+    require_confirmation: true

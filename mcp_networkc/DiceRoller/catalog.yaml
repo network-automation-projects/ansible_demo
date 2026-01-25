@@ -1,0 +1,14 @@
+servers:
+  dice:
+    ref: dice-mcp-server:latest
+    description: Simple dice roller for coin flips, D&D dice, and general rolling mechanics
+    tools:
+      - name: roll_dice
+        description: Roll dice using standard notation (e.g., '2d6', '1d20+5', '3d8-2')
+      - name: flip_coin
+        description: Flip a coin one or more times. Returns Heads or Tails for each flip.
+      - name: roll_dnd_stats
+        description: Generate D&D character ability scores using the standard 4d6 drop lowest method
+      - name: roll_dnd_ability
+        description: Roll a D&D ability check, saving throw, or attack roll using a d20 with optional modifier
+

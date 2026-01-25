@@ -1,0 +1,29 @@
+# Example Docker deployment configuration
+name: myapp
+type: docker
+path: ./myapp
+build:
+  dockerfile: Dockerfile
+  context: .
+health_check:
+  endpoint: http://localhost:8080/health
+  timeout: 30
+  interval: 5
+  retries: 3
+  expected_status: 200
+environments:
+  dev:
+    port: 8080
+    env_vars:
+      ENV: development
+      DEBUG: "true"
+  staging:
+    port: 8080
+    env_vars:
+      ENV: staging
+      DEBUG: "false"
+  prod:
+    port: 8080
+    env_vars:
+      ENV: production
+      DEBUG: "false"

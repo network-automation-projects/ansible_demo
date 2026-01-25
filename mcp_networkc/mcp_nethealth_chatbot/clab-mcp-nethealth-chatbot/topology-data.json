@@ -1,0 +1,101 @@
+{
+  "name": "mcp-nethealth-chatbot",
+  "type": "clab",
+  "clab": {
+    "config": {
+      "prefix": "clab",
+      "mgmt": {
+        "network": "clab",
+        "bridge": "br-89065e0c01bb",
+        "ipv4-subnet": "172.20.20.0/24",
+        "ipv4-gw": "172.20.20.1",
+        "ipv6-subnet": "3fff:172:20:20::/64",
+        "ipv6-gw": "3fff:172:20:20::1",
+        "external-access": true
+      }
+    }
+  },
+  "ssh-pub-keys": [],
+  "nodes": {
+    "router1": {
+      "index": "0",
+      "shortname": "router1",
+      "longname": "clab-mcp-nethealth-chatbot-router1",
+      "fqdn": "router1.mcp-nethealth-chatbot.io",
+      "group": "",
+      "labdir": "/workspace/clab-mcp-nethealth-chatbot/router1",
+      "kind": "srl",
+      "image": "ghcr.io/nokia/srlinux:latest",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "",
+      "mgmt-ipv4-prefix-length": 0,
+      "mgmt-ipv6-address": "",
+      "mgmt-ipv6-prefix-length": 0,
+      "mac-address": "1a:4b:00:00:00:00",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-89065e0c01bb",
+        "clab-node-group": "",
+        "clab-node-kind": "srl",
+        "clab-node-lab-dir": "/workspace/clab-mcp-nethealth-chatbot/router1",
+        "clab-node-longname": "clab-mcp-nethealth-chatbot-router1",
+        "clab-node-name": "router1",
+        "clab-node-type": "ixr-d2l",
+        "clab-owner": "",
+        "clab-topo-file": "/workspace/topology.yml",
+        "containerlab": "mcp-nethealth-chatbot"
+      },
+      "port-bindings": [
+      ]
+    },
+    "router2": {
+      "index": "1",
+      "shortname": "router2",
+      "longname": "clab-mcp-nethealth-chatbot-router2",
+      "fqdn": "router2.mcp-nethealth-chatbot.io",
+      "group": "",
+      "labdir": "/workspace/clab-mcp-nethealth-chatbot/router2",
+      "kind": "srl",
+      "image": "ghcr.io/nokia/srlinux:latest",
+      "mgmt-net": "",
+      "mgmt-intf": "",
+      "mgmt-ipv4-address": "",
+      "mgmt-ipv4-prefix-length": 0,
+      "mgmt-ipv6-address": "",
+      "mgmt-ipv6-prefix-length": 0,
+      "mac-address": "1a:8f:01:00:00:00",
+      "labels": {
+        "clab-mgmt-net-bridge": "br-89065e0c01bb",
+        "clab-node-group": "",
+        "clab-node-kind": "srl",
+        "clab-node-lab-dir": "/workspace/clab-mcp-nethealth-chatbot/router2",
+        "clab-node-longname": "clab-mcp-nethealth-chatbot-router2",
+        "clab-node-name": "router2",
+        "clab-node-type": "ixr-d2l",
+        "clab-owner": "",
+        "clab-topo-file": "/workspace/topology.yml",
+        "containerlab": "mcp-nethealth-chatbot"
+      },
+      "port-bindings": [
+      ]
+    }
+  },
+  "links": [
+    {
+      "endpoints": {
+        "a": {
+          "node": "router1",
+          "interface": "e1-1",
+          "mac": "aa:c1:ab:cc:01:4c",
+          "peer": "z"
+        },
+        "z": {
+          "node": "router2",
+          "interface": "e1-1",
+          "mac": "aa:c1:ab:d8:83:16",
+          "peer": "a"
+        }
+      }
+    }
+  ]
+}

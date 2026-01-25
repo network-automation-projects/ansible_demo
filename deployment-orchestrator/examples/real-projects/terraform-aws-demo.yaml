@@ -1,0 +1,21 @@
+# terraform-aws-demo deployment configuration
+name: terraform-aws-demo
+type: terraform
+path: ../terraform-aws-demo
+terraform_version: ">= 1.6.0"
+pre_deploy:
+  - type: terraform_init
+  - type: terraform_validate
+  - type: terraform_plan
+    output_file: plan.out
+environments:
+  dev:
+    var_file: terraform.tfvars.dev
+    auto_approve: false
+  staging:
+    var_file: terraform.tfvars.staging
+    auto_approve: false
+  prod:
+    var_file: terraform.tfvars.prod
+    auto_approve: false
+    require_confirmation: true

@@ -1,0 +1,14 @@
+# Environment definitions
+environments:
+  dev:
+    description: Development environment
+    auto_approve: true
+    
+  staging:
+    description: Staging environment
+    auto_approve: false
+    
+  prod:
+    description: Production environment
+    auto_approve: false
+    require_confirmation: true

@@ -1,0 +1,12 @@
+servers:
+  toggl:
+    ref: toggl-mcp-server:latest
+    description: Toggl time tracking integration for starting timers, stopping timers, and viewing time entries
+    tools:
+      - name: start_timer
+        description: Start a new time tracking entry in Toggl. Requires a workspace ID.
+      - name: stop_timer
+        description: Stop the currently running time entry in Toggl. Automatically finds and stops the active timer.
+      - name: view_timers
+        description: View existing time entries from Toggl with optional date filtering.
+

@@ -1,0 +1,238 @@
+{% extends "base.html" %}
+
+{% block title %}{{ device.get('hostname', device.get('ip')) }} - Device Details{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ url_for('index') }}">Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ url_for('devices') }}">Devices</a></li>
+                <li class="breadcrumb-item active">{{ device.get('hostname', device.get('ip')) }}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="row mb-3">
+    <div class="col-12">
+        <h1>
+            <i class="bi bi-router"></i> {{ device.get('hostname', device.get('ip')) }}
+            <span class="badge bg-secondary">{{ device.get('device_type', '') }}</span>
+        </h1>
+    </div>
+</div>
+
+<!-- Device Status Card -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-info-circle"></i> Device Information</h5>
+            </div>
+            <div class="card-body">
+                <table class="table table-borderless">
+                    <tr>
+                        <th>IP Address:</th>
+                        <td><code>{{ device.get('ip', '') }}</code></td>
+                    </tr>
+                    <tr>
+                        <th>Hostname:</th>
+                        <td>{{ device.get('hostname', 'N/A') }}</td>
+                    </tr>
+                    <tr>
+                        <th>Device Type:</th>
+                        <td><span class="badge bg-secondary">{{ device.get('device_type', '') }}</span></td>
+                    </tr>
+                    <tr>
+                        <th>Status:</th>
+                        <td>
+                            {% if device.get('status') == 'reachable' %}
+                                <span class="badge bg-success">
+                                    <i class="bi bi-check-circle"></i> Reachable
+                                </span>
+                            {% elif device.get('status') == 'unreachable' %}
+                                <span class="badge bg-danger">
+                                    <i class="bi bi-x-circle"></i> Unreachable
+                                </span>
+                            {% elif device.get('status') == 'auth_failed' %}
+                                <span class="badge bg-warning">
+                                    <i class="bi bi-shield-exclamation"></i> Auth Failed
+                                </span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ device.get('status', 'Unknown') }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Last Seen:</th>
+                        <td>
+                            {% if device.get('last_seen') %}
+                                {{ device.get('last_seen') }}
+                            {% else %}
+                                <span class="text-muted">Never</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% if device.get('error') %}
+                    <tr>
+                        <th>Error:</th>
+                        <td><span class="text-danger">{{ device.get('error') }}</span></td>
+                    </tr>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="bi bi-gear"></i> Actions</h5>
+            </div>
+            <div class="card-body">
+                <form method="POST" action="{{ url_for('trigger_backup', ip=device.get('ip')) }}">
+                    <button type="submit" class="btn btn-primary w-100 mb-2">
+                        <i class="bi bi-download"></i> Backup Configuration
+                    </button>
+                </form>
+                <a href="{{ url_for('devices') }}" class="btn btn-outline-secondary w-100">
+                    <i class="bi bi-arrow-left"></i> Back to Devices
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Device Facts -->
+{% if device.get('facts') %}
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-list-check"></i> Device Facts</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="table table-borderless">
+                            <tr>
+                                <th>Hostname (from device):</th>
+                                <td>{{ device.get('facts').get('hostname_from_device', 'N/A') }}</td>
+                            </tr>
+                            <tr>
+                                <th>Model:</th>
+                                <td>{{ device.get('facts').get('model', 'Unknown') }}</td>
+                            </tr>
+                            <tr>
+                                <th>Serial Number:</th>
+                                <td>{{ device.get('facts').get('serial', 'Unknown') }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-borderless">
+                            <tr>
+                                <th>Version:</th>
+                                <td>
+                                    {% if device.get('facts').get('version') != 'Unknown' %}
+                                        <code>{{ device.get('facts').get('version', '')[:80] }}</code>
+                                    {% else %}
+                                        Unknown
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <th>Uptime:</th>
+                                <td>{{ device.get('facts').get('uptime', 'Unknown') }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<!-- Backup History -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-clock-history"></i> Backup History</h5>
+            </div>
+            <div class="card-body">
+                {% if backups %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>Backup Path</th>
+                                <th>Size</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for backup in backups %}
+                            <tr>
+                                <td>{{ backup.get('timestamp', '') }}</td>
+                                <td><code>{{ backup.get('backup_path', '') }}</code></td>
+                                <td>{{ "%.2f"|format(backup.get('size_bytes', 0) / 1024) }} KB</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">No backups found for this device.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Audit Results -->
+{% if audit_results %}
+<div class="row">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0"><i class="bi bi-shield-check"></i> Audit Results</h5>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Check Name</th>
+                                <th>Status</th>
+                                <th>Details</th>
+                                <th>Timestamp</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for audit in audit_results %}
+                            <tr>
+                                <td>{{ audit.get('check_name', '') }}</td>
+                                <td>
+                                    <span class="badge bg-{{ 'success' if audit.get('status') == 'pass' else 'danger' }}">
+                                        {{ audit.get('status', '') }}
+                                    </span>
+                                </td>
+                                <td>{{ audit.get('details', '') }}</td>
+                                <td>{{ audit.get('timestamp', '')[:16] }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+
+
+

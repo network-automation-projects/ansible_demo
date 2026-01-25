@@ -1,0 +1,11 @@
+---
+router1:
+    username: admin
+    password: NokiaSrl1!
+    platform: srl
+    hostname: 
+router2:
+    username: admin
+    password: NokiaSrl1!
+    platform: srl
+    hostname: 

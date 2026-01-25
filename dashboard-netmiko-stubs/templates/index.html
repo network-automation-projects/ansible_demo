@@ -1,0 +1,188 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - Network Automation{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">
+            <i class="bi bi-speedometer2"></i> Dashboard
+        </h1>
+    </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-devices"></i> Total Devices
+                </h5>
+                <h2 class="mb-0">{{ stats.get('total', 0) }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-check-circle"></i> Reachable
+                </h5>
+                <h2 class="mb-0">{{ stats.get('by_status', {}).get('reachable', 0) }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-danger">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-x-circle"></i> Unreachable
+                </h5>
+                <h2 class="mb-0">{{ stats.get('by_status', {}).get('unreachable', 0) }}</h2>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info">
+            <div class="card-body">
+                <h5 class="card-title">
+                    <i class="bi bi-archive"></i> Total Backups
+                </h5>
+                <h2 class="mb-0">{{ stats.get('total_backups', 0) }}</h2>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Action Buttons -->
+<div class="row mb-4">
+    <div class="col-12">
+        <button id="refreshBtn" class="btn btn-primary">
+            <i class="bi bi-arrow-clockwise"></i> Refresh All Devices
+        </button>
+        <span id="refreshStatus" class="ms-3"></span>
+    </div>
+</div>
+
+<!-- Device Status Overview -->
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-list-ul"></i> Device Status
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if devices %}
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Hostname</th>
+                                <th>IP Address</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for device in devices %}
+                            <tr>
+                                <td>{{ device.get('hostname', 'N/A') }}</td>
+                                <td><code>{{ device.get('ip', '') }}</code></td>
+                                <td><span class="badge bg-secondary">{{ device.get('device_type', '') }}</span></td>
+                                <td>
+                                    {% if device.get('status') == 'reachable' %}
+                                        <span class="badge bg-success">Reachable</span>
+                                    {% elif device.get('status') == 'unreachable' %}
+                                        <span class="badge bg-danger">Unreachable</span>
+                                    {% elif device.get('status') == 'auth_failed' %}
+                                        <span class="badge bg-warning">Auth Failed</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">{{ device.get('status', 'Unknown') }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <a href="{{ url_for('device_detail', ip=device.get('ip')) }}" 
+                                       class="btn btn-sm btn-outline-primary">
+                                        <i class="bi bi-eye"></i> View
+                                    </a>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <p class="text-muted">No devices found. Please add devices to config/devices.yaml</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Recent Backups -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5 class="mb-0">
+                    <i class="bi bi-clock-history"></i> Recent Backups
+                </h5>
+            </div>
+            <div class="card-body">
+                {% if recent_backups %}
+                <div class="list-group list-group-flush">
+                    {% for backup in recent_backups[:5] %}
+                    <div class="list-group-item">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h6 class="mb-1"><code>{{ backup.get('device_ip', '') }}</code></h6>
+                            <small>{{ backup.get('timestamp', '')[:10] }}</small>
+                        </div>
+                        <p class="mb-1 small text-muted">{{ backup.get('backup_path', '') }}</p>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p class="text-muted">No backups yet.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+$(document).ready(function() {
+    $('#refreshBtn').click(function() {
+        const btn = $(this);
+        const status = $('#refreshStatus');
+        
+        btn.prop('disabled', true);
+        status.html('<i class="bi bi-hourglass-split"></i> Refreshing...');
+        
+        $.ajax({
+            url: '{{ url_for("refresh_devices") }}',
+            method: 'POST',
+            success: function(data) {
+                status.html('<span class="text-success"><i class="bi bi-check-circle"></i> ' + data.message + '</span>');
+                setTimeout(function() {
+                    location.reload();
+                }, 1000);
+            },
+            error: function(xhr) {
+                const error = xhr.responseJSON ? xhr.responseJSON.message : 'Error refreshing devices';
+                status.html('<span class="text-danger"><i class="bi bi-x-circle"></i> ' + error + '</span>');
+            },
+            complete: function() {
+                btn.prop('disabled', false);
+            }
+        });
+    });
+});
+</script>
+{% endblock %}
+
+
+

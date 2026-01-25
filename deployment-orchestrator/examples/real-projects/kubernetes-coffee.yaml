@@ -1,0 +1,18 @@
+# kubernetes-coffee deployment configuration
+name: kubernetes-coffee
+type: kubernetes
+path: ../docker-kubernetes-demo/manifests
+health_check:
+  endpoint: http://coffee-service.default.svc.cluster.local
+  timeout: 30
+  interval: 5
+  retries: 3
+  expected_status: 200
+environments:
+  dev:
+    namespace: coffee-dev
+  staging:
+    namespace: coffee-staging
+  prod:
+    namespace: coffee-prod
+    require_confirmation: true

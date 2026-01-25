@@ -1,0 +1,18 @@
+servers:
+  network-monitor:
+    ref: network-monitor-mcp:latest
+    description: Network monitoring MCP server with Netmiko integration, context storage, and Prometheus metrics support
+    tools:
+      - name: check_interface_status
+        description: Query interface status on a network device via Netmiko
+      - name: get_device_info
+        description: Get device information including hostname, version, uptime, and system facts
+      - name: store_network_context
+        description: Store network state and context to MCP persistent storage
+      - name: retrieve_network_context
+        description: Retrieve historical network context from MCP storage
+      - name: query_prometheus
+        description: Query Prometheus metrics API for network metrics
+      - name: detect_issues
+        description: Analyze current network state and detect issues like interface down, high latency, or connectivity problems
+

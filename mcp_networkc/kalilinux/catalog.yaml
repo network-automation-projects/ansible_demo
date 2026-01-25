@@ -1,0 +1,18 @@
+servers:
+  kali-security:
+    ref: kali-security-mcp-server:latest
+    description: Security testing tools MCP server with nmap, nikto, sqlmap, wpscan, dirb, and searchsploit for educational web penetration testing
+    tools:
+      - name: nmap_scan
+        description: Perform network port scanning using nmap
+      - name: nikto_scan
+        description: Perform web server vulnerability scanning using nikto
+      - name: sqlmap_scan
+        description: Perform SQL injection testing using sqlmap
+      - name: wpscan_scan
+        description: Perform WordPress vulnerability scanning using wpscan
+      - name: dirb_scan
+        description: Perform directory/file brute-forcing using dirb
+      - name: searchsploit_search
+        description: Search the Exploit Database using searchsploit
+

@@ -1,0 +1,27 @@
+# Example SSH-based deployment configuration
+name: myapp
+type: ssh
+path: ./myapp
+remote_host: server.example.com
+remote_user: deploy
+remote_path: /opt/myapp
+pre_deploy:
+  - type: file_check
+    path: dist/myapp.tar.gz
+post_deploy:
+  - type: command
+    command: systemctl restart myapp
+health_check:
+  endpoint: http://server.example.com:8080/health
+  timeout: 30
+  interval: 5
+  retries: 3
+  expected_status: 200
+environments:
+  dev:
+    remote_host: dev-server.example.com
+  staging:
+    remote_host: staging-server.example.com
+  prod:
+    remote_host: prod-server.example.com
+    require_confirmation: true

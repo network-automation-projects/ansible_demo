@@ -1,0 +1,28 @@
+{
+  "devices": [
+    {
+      "hostname": "r1.border",
+      "ip": "10.0.0.1",
+      "model": "Cisco ASR1000",
+      "platform": "cisco_ios",
+      "status": "maintenance",
+      "serial": "FTX12345678"
+    },
+    {
+      "hostname": "r2.core",
+      "ip": "10.0.0.2",
+      "model": "Cisco Nexus 9300",
+      "platform": "cisco_nxos",
+      "status": "active",
+      "serial": "N9K98765432"
+    },
+    {
+      "hostname": "sw2.access",
+      "ip": "10.0.0.20",
+      "model": "Cisco Catalyst 9300",
+      "platform": "cisco_ios",
+      "status": "active",
+      "serial": "CAT22222222"
+    }
+  ]
+}

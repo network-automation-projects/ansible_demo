@@ -1,0 +1,7 @@
+name,size,availability_zone,subnet_type,tags
+public-subnet-1,24,us-east-1a,public,"Environment=prod,Project=webapp"
+public-subnet-2,24,us-east-1b,public,"Environment=prod,Project=webapp"
+private-subnet-1,24,us-east-1a,private,"Environment=prod,Project=webapp"
+private-subnet-2,24,us-east-1b,private,"Environment=prod,Project=webapp"
+database-subnet-1,26,us-east-1a,database,"Environment=prod,Project=webapp"
+database-subnet-2,26,us-east-1b,database,"Environment=prod,Project=webapp"

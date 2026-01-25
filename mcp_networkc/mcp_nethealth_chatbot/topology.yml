@@ -1,0 +1,17 @@
+name: mcp-nethealth-chatbot
+
+topology:
+  kinds:
+    srl:
+      type: ixr-d2l
+      image: ghcr.io/nokia/srlinux:latest
+
+  nodes:
+    router1:
+      kind: srl
+    router2:
+      kind: srl
+
+  links:
+    - endpoints: ["router1:ethernet-1/1", "router2:ethernet-1/1"]
+

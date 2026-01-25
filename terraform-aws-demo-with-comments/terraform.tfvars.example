@@ -1,0 +1,32 @@
+# AWS Configuration
+aws_region = "us-east-1"
+
+# VPC Configuration
+vpc_cidr           = "10.0.0.0/16"
+public_subnet_cidr = "10.0.1.0/24"
+private_subnet_cidr = "10.0.2.0/24"
+
+# Availability Zone (leave empty to auto-generate based on region)
+availability_zone = ""
+
+# EC2 Configuration
+instance_type = "t2.micro"  # Free Tier eligible
+
+# Security Configuration
+# Replace with your public IP (use /32 for single IP)
+# Find your IP at: https://whatismyip.com
+allowed_ssh_cidr  = "0.0.0.0/0"  # WARNING: Restrict this to your IP in production!
+allowed_http_cidr = "0.0.0.0/0"
+
+# Project Configuration
+project_name = "terraform-aws-demo"
+environment  = "dev"
+
+# NAT Gateway (costs ~$0.045/hour when enabled)
+enable_nat_gateway = true
+
+# Additional Tags
+tags = {
+  Owner = "devops-team"
+  CostCenter = "training"
+}

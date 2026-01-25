@@ -1,0 +1,28 @@
+# go-monitor deployment configuration
+name: go-monitor
+type: docker-compose
+path: ../go-monitor
+compose_file: docker-compose.yml
+health_check:
+  endpoint: http://localhost:2112/metrics
+  timeout: 30
+  interval: 10
+  retries: 3
+  expected_status: 200
+environments:
+  dev:
+    env_vars:
+      HOST: google.com
+    ports:
+      - "2112:2112"
+  staging:
+    env_vars:
+      HOST: staging.example.com
+    ports:
+      - "2112:2112"
+  prod:
+    env_vars:
+      HOST: prod.example.com
+    ports:
+      - "2112:2112"
+    require_confirmation: true

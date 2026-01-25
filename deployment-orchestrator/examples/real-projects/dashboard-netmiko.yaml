@@ -1,0 +1,38 @@
+# dashboard-netmiko deployment configuration
+name: dashboard-netmiko
+type: docker
+path: ../dashboard-netmiko
+build:
+  dockerfile: Dockerfile
+  context: .
+health_check:
+  endpoint: http://localhost:5001/api/stats
+  timeout: 30
+  interval: 5
+  retries: 3
+  expected_status: 200
+pre_deploy:
+  - type: file_check
+    path: config/devices.yaml
+  - type: directory_check
+    path: data
+post_deploy:
+  - type: database_init
+    script: scripts/init_db.py
+environments:
+  dev:
+    port: 5001
+    env_vars:
+      FLASK_ENV: development
+      FLASK_DEBUG: "1"
+  staging:
+    port: 5001
+    env_vars:
+      FLASK_ENV: production
+      FLASK_DEBUG: "0"
+  prod:
+    port: 5001
+    env_vars:
+      FLASK_ENV: production
+      FLASK_DEBUG: "0"
+    require_confirmation: true
