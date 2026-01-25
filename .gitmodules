@@ -1,0 +1,36 @@
+[submodule "dashboard-netmiko"]
+	path = dashboard-netmiko
+	url = https://github.com/network-automation-projects/dashboard-netmiko.git
+[submodule "docker-kubernetes-demo"]
+	path = docker-kubernetes-demo
+	url = https://github.com/network-automation-projects/docker-kubernetes-demo.git
+[submodule "docker-kubernetes-demo-with-comments"]
+	path = docker-kubernetes-demo-with-comments
+	url = https://github.com/network-automation-projects/docker-kubernetes-demo.git
+[submodule "file_automator"]
+	path = file_automator
+	url = https://github.com/rclarke009/file_automator.git
+[submodule "go-monitor"]
+	path = go-monitor
+	url = https://github.com/network-automation-projects/go-monitor.git
+[submodule "go-monitor-with-comments"]
+	path = go-monitor-with-comments
+	url = https://github.com/network-automation-projects/go-monitor.git
+[submodule "go-monitor-with-grafana"]
+	path = go-monitor-with-grafana
+	url = https://github.com/network-automation-projects/go-monitor.git
+[submodule "go-monitor-with-grafana-with-my-comments"]
+	path = go-monitor-with-grafana-with-my-comments
+	url = https://github.com/network-automation-projects/go-monitor.git
+[submodule "netmiko_tool"]
+	path = netmiko_tool
+	url = https://github.com/network-automation-tools/netmiko_tool.git
+[submodule "news-sentiment-comparison"]
+	path = news-sentiment-comparison
+	url = https://github.com/rclarke009/news-sentiment-comparison.git
+[submodule "terraform-aws-demo"]
+	path = terraform-aws-demo
+	url = https://github.com/rclarke009/terraform-aws-demo.git
+[submodule "telemetry_db"]
+	path = telemetry_db
+	url = https://github.com/network-automation-projects/telemetry_db.git
