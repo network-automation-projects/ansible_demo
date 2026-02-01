@@ -79,3 +79,8 @@ logs/
 # SSH / keys (do not commit)
 gitlabssh.txt
 gitlabssh.txt.pub
+
+# Terraform (provider binaries and local state)
+.terraform/
+*.tfstate
+*.tfstate.*
