@@ -1,0 +1,23 @@
+# Python Dates Exercise - Dependencies
+# ====================================
+#
+# Core dependencies for the datetime exercises.
+# Most exercises use Python 3.9+ standard library (zoneinfo).
+#
+# For Python < 3.9, install backports.zoneinfo
+
+# Timezone support (Python 3.9+ has zoneinfo in stdlib)
+# For Python < 3.9, uncomment the line below:
+# backports.zoneinfo>=0.2.1
+
+# Locale-aware formatting (optional but recommended)
+babel>=2.12.0
+
+# Alternative timezone library (if you prefer over zoneinfo)
+# pytz>=2023.3  # Not needed if using zoneinfo, but included for reference
+
+# Human-readable relative time (optional, for advanced exercises)
+# humanize>=4.7.0  # Uncomment if you want to use humanize library
+
+# Date parsing utilities (optional)
+# dateutil>=2.8.2  # Uncomment if you need advanced parsing

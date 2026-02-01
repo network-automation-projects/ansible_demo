@@ -1,0 +1,28 @@
+# Sample data for mock Infoblox server
+networks:
+  - network: "192.168.1.0/24"
+    comment: "Production Network"
+    extattrs: {}
+  - network: "10.0.0.0/16"
+    comment: "Development Network"
+    extattrs: {}
+
+dns_zones:
+  - fqdn: "example.com"
+    zone_format: "FORWARD"
+  - fqdn: "1.168.192.in-addr.arpa"
+    zone_format: "IPV4"
+
+dns_records:
+  - name: "web.example.com"
+    ipv4addr: "192.168.1.10"
+    record_type: "A"
+  - name: "www.example.com"
+    canonical: "web.example.com"
+    record_type: "CNAME"
+
+dhcp_ranges:
+  - start_ip: "192.168.1.100"
+    end_ip: "192.168.1.200"
+    network: "192.168.1.0/24"
+    comment: "DHCP Pool"

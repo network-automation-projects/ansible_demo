@@ -75,3 +75,7 @@ logs/
 *.temp
 *.bak
 *.backup
+
+# SSH / keys (do not commit)
+gitlabssh.txt
+gitlabssh.txt.pub

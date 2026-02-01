@@ -1,0 +1,21 @@
+Cisco IOS Software, C2960 Software (C2960-LANBASEK9-M), Version 15.2(7)E4, RELEASE SOFTWARE (fc2)
+Technical Support: http://www.cisco.com/techsupport
+Copyright (c) 1986-2020 by Cisco Systems, Inc.
+Compiled Wed 03-Jun-20 02:49 by prod_rel_team
+
+ROM: Bootstrap program is C2960 boot loader
+BOOTLDR: C2960 Boot Loader (C2960-HBOOT-M) Version 15.2(7)E4, RELEASE SOFTWARE (fc4)
+
+switch1 uptime is 5 weeks, 2 days, 3 hours, 22 minutes
+System returned to ROM by power-on
+System image file is "flash:/c2960-lanbasek9-mz.152-7.E4.bin"
+Last reload reason: power-on
+
+Cisco CISCO2960-24TC-L (revision R0) with 64430K/10740K bytes of memory.
+Processor board ID FCW2140L0BZ
+1 Virtual Ethernet interface
+24 Gigabit Ethernet interfaces
+2 Ten Gigabit Ethernet interfaces
+
+The base ethernet MAC Address is 70:72:CF:12:34:56
+Configuration register is 0xF

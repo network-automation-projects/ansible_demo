@@ -1,0 +1,4 @@
+# Primary config
+HOST=localhost
+PORT=8080
+LOG_LEVEL=info

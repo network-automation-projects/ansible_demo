@@ -1,0 +1,15 @@
+infoblox:
+  # Use mock server by default
+  use_mock: true
+  mock_url: "http://localhost:8080"
+  
+  # Real Infoblox settings (optional)
+  url: "https://infoblox.example.com"
+  username: ""  # Set via INFOBLOX_USERNAME environment variable
+  password: ""  # Set via INFOBLOX_PASSWORD environment variable
+  wapi_version: "v2.12"
+  verify_ssl: false  # Set to true in production
+  
+  # Connection settings
+  timeout: 30
+  max_retries: 3

@@ -1,0 +1,6 @@
+# Minimal inventory for ansible_playbook_driver exercise.
+# Single host (localhost) so the playbook runs without real servers.
+all:
+  hosts:
+    localhost:
+      ansible_connection: local

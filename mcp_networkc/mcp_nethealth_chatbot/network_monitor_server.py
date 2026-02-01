@@ -9,6 +9,7 @@ import json
 import re
 import asyncio
 import logging
+import os
 from datetime import datetime
 from typing import Any, Sequence
 from pathlib import Path
@@ -37,11 +38,12 @@ server = Server("network-monitor")
 CONTEXT_STORAGE: dict[str, Any] = {}
 
 # Default device credentials for Containerlab Nokia SR Linux
+# Credentials are loaded from environment variables for security
 DEFAULT_DEVICE_CONFIG = {
     'device_type': 'nokia_srl',
-    'username': 'admin',
-    'password': 'NokiaSrl1!',
-    'port': 22,
+    'username': os.getenv('ROUTER_USERNAME', 'admin'),
+    'password': os.getenv('ROUTER_PASSWORD', ''),
+    'port': int(os.getenv('ROUTER_PORT', '22')),
     'timeout': 30,
     'session_timeout': 30,
 }

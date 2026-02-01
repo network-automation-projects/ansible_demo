@@ -1,0 +1,11 @@
+# Minimal inventory for netmiko_connection_runner.
+# For mock mode (NETMIKO_USE_MOCK=1): no real devices needed.
+# For real run: uncomment and fill in your device; set NET_USER and NET_PASS env vars.
+
+devices: []
+  # - hostname: r1
+  #   ip: 192.168.1.1
+  #   device_type: cisco_ios
+  #   # username: admin   # optional, uses NET_USER if not set
+  #   # password: secret  # optional, uses NET_PASS if not set
+  #   # secret: enable    # optional, for enable mode

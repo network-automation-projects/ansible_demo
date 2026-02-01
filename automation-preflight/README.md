@@ -1,30 +1,65 @@
 # Automation Preflight Validation Tool
 
-A Python CLI tool that validates network device readiness before automation runs. This tool acts as a guardrail to ensure devices meet required preconditions before making configuration changes.
+A Python-based CLI tool that performs **preflight validation of network devices before automation or configuration changes are executed**.
+The goal is to reduce risk by ensuring devices meet required preconditions *before* any changes are applied.
 
-## Why This Tool?
+This project reflects a **"validation-first" approach to network automation**, where safety checks and guardrails are treated as first-class concerns rather than afterthoughts.
 
-**Interview Value:** Demonstrates senior-level "validation before changes" thinking, showing you understand the importance of safety checks in network automation.
+## Why This Project Exists
 
-**Real-World Use:** Prevents unsafe automation runs by validating:
-- Device connectivity and accessibility
-- OS version compatibility
-- Device stability (uptime checks)
-- Required configuration variables
+In real-world automation, failures often come from **known but unchecked conditions**:
 
-## Features
+* Devices running unsupported OS versions
+* Recently rebooted or unstable devices
+* Incomplete inventory data
+* Credentials or connectivity issues discovered too late
 
-- **YAML Inventory Support**: Load devices from structured inventory files
-- **Multiple Validation Checks**:
-  - Hostname presence and validity
-  - OS version compatibility (configurable minimums)
-  - Uptime thresholds (ensures device stability)
-  - Required variables validation
-- **Mock Mode**: Safe testing without live device connections (`--mock` flag)
-- **Dry-Run Mode**: Validate configuration without connecting (`--dry-run`)
-- **Flexible Output**: Human-readable text or structured JSON
-- **Structured Logging**: Detailed logs for debugging and audit trails
-- **Exit Codes**: Integration-friendly (0=pass, 1=fail, 2=config error)
+This tool acts as a **gatekeeper** between intent and execution.
+
+From a portfolio perspective, it demonstrates:
+
+* Senior-level thinking around **change safety and blast-radius reduction**
+* Practical experience designing **automation guardrails**
+* An understanding that automation reliability starts *before* configuration changes
+
+## What the Tool Does
+
+Before automation runs, the tool validates that each target device:
+
+* Is reachable and accessible
+* Meets minimum OS version requirements
+* Has sufficient uptime to indicate stability
+* Includes all required inventory variables
+
+Validation results are returned as **structured output with clear pass/fail signals**, making the tool suitable for both human review and CI/CD pipelines.
+
+## Key Features
+
+* **YAML-Based Inventory**
+
+  * Devices are defined in a structured, version-controlled inventory file
+
+* **Preflight Validation Checks**
+
+  * Hostname presence and validity
+  * OS version compatibility (configurable minimums)
+  * Device uptime thresholds
+  * Required variable validation
+
+* **Safe Execution Modes**
+
+  * **Mock mode** (`--mock`) for demos and local testing
+  * **Dry-run mode** (`--dry-run`) for validating configuration only
+
+* **Automation-Friendly Output**
+
+  * Human-readable text output
+  * Structured JSON output for pipelines and tooling
+
+* **Operational Signals**
+
+  * Structured logging for auditing and debugging
+  * Meaningful exit codes for integration with automation workflows
 
 ## Requirements
 

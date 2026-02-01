@@ -1,0 +1,13 @@
+---
+# Minimal playbook for ansible_playbook_driver exercise.
+# Single play targeting localhost; no network devices or credentials.
+- name: Minimal ping and debug
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Ping
+      ansible.builtin.ping:
+
+    - name: Show message
+      ansible.builtin.debug:
+        msg: "Ansible playbook driver exercise ran successfully."

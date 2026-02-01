@@ -1,0 +1,45 @@
+# Core dependencies
+netmiko>=4.1.0
+napalm>=4.1.0
+paramiko>=3.0.0
+
+# API and HTTP
+requests>=2.31.0
+pynetbox>=7.0.0
+pynautobot>=1.4.0
+
+# Configuration management
+jinja2>=3.1.0
+pyyaml>=6.0
+
+# Data analysis
+numpy>=1.24.0
+pandas>=2.0.0
+scipy>=1.10.0
+matplotlib>=3.7.0
+
+# Date/time handling
+python-dateutil>=2.8.0
+
+# Observability
+prometheus-client>=0.17.0
+
+# Cloud and orchestration
+docker>=6.1.0
+kubernetes>=27.0.0
+boto3>=1.28.0
+
+# Web frameworks
+fastapi>=0.100.0
+flask>=2.3.0
+uvicorn>=0.23.0
+
+# Database
+sqlalchemy>=2.0.0
+
+# Data validation
+pydantic>=2.0.0
+
+# Testing (optional but recommended)
+pytest>=7.4.0
+pytest-asyncio>=0.21.0

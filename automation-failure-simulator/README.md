@@ -2,6 +2,8 @@
 
 A Python tool that demonstrates resilient automation design by simulating real-world failure scenarios (timeouts, flaky devices, partial failures) and showing how to handle them gracefully with retry logic, exponential backoff, and failure isolation.
 
+**All execution is in-memory—no real network connections are made, and all devices and IPs are synthetic.**
+
 ## Features
 
 - **Failure Simulation**: Simulates timeout, flaky, and partial failure scenarios

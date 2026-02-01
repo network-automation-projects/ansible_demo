@@ -165,11 +165,18 @@ bash scripts/diagnose_routers.sh
    - Try: `docker pull ghcr.io/srl-labs/clab:latest`
    - Verify wrapper: `cat /usr/local/bin/clab`
 
-## Default Credentials
+## Router Credentials
 
-The Nokia SR Linux routers use:
-- Username: `admin`
-- Password: `NokiaSrl1!`
+Set the following environment variables before running:
+```bash
+export ROUTER_USERNAME='admin'
+export ROUTER_PASSWORD='your-router-password'
+```
+
+Or create a `.env` file (see `.env.example`) and source it:
+```bash
+source .env
+```
 
 ## Stopping Everything
 

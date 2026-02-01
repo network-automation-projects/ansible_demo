@@ -108,9 +108,23 @@ pip3 install -r requirements.txt
 ### 3. Set Environment Variables
 
 ```bash
+# Required: OpenAI API key
 export OPENAI_API_KEY='your-api-key-here'
 export OPENAI_MODEL='gpt-4'  # or 'gpt-3.5-turbo'
-export PROMETHEUS_URL='http://localhost:9090'  # Optional
+
+# Required: Router credentials (for Containerlab Nokia SR Linux)
+export ROUTER_USERNAME='admin'
+export ROUTER_PASSWORD='your-router-password'
+
+# Optional
+export PROMETHEUS_URL='http://localhost:9090'
+export ROUTER_PORT='22'  # Default: 22
+```
+
+**Note:** For security, create a `.env` file (see `.env.example`) and load it:
+```bash
+# Using python-dotenv (install with: pip install python-dotenv)
+source .env  # or use: export $(cat .env | xargs)
 ```
 
 ### 4. Deploy Network Topology
@@ -127,9 +141,11 @@ The routers will be accessible at:
 - `clab-mcp-nethealth-chatbot-router1`
 - `clab-mcp-nethealth-chatbot-router2`
 
-Default credentials:
-- Username: `admin`
-- Password: `NokiaSrl1!`
+**Router Credentials:**
+- Set `ROUTER_USERNAME` and `ROUTER_PASSWORD` environment variables
+- Default username is `admin` if not set
+- Password must be set via `ROUTER_PASSWORD` environment variable
+- See `.env.example` for configuration template
 
 ### 5. Start Prometheus (Optional)
 
@@ -362,7 +378,7 @@ docker ps | grep router
 
 # Test SSH connectivity
 ssh admin@clab-mcp-nethealth-chatbot-router1
-# Password: NokiaSrl1!
+# Password: Use the value from ROUTER_PASSWORD environment variable
 ```
 
 ### Issue: OpenAI API errors

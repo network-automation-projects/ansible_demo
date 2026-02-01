@@ -1,0 +1,26 @@
+---
+# Sample playbook for ansible_playbook_parser exercise.
+- name: First play - ping web hosts
+  hosts: web
+  gather_facts: false
+  tasks:
+    - name: Ping
+      ansible.builtin.ping:
+
+    - name: Show hostname
+      ansible.builtin.debug:
+        msg: "{{ inventory_hostname }}"
+
+- name: Second play - configure db hosts
+  hosts: db
+  gather_facts: false
+  tasks:
+    - name: Ensure directory exists
+      ansible.builtin.file:
+        path: /tmp/ansible_exercise
+        state: directory
+      delegate_to: localhost
+
+    - name: Unnamed task
+      ansible.builtin.debug:
+        msg: "Done"
