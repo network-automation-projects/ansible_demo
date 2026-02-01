@@ -1,4 +1,0 @@
-# Automation Failure Simulator
-# Python 3.9+ required
-
-# No external dependencies required - uses only standard library

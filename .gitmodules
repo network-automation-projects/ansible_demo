@@ -34,3 +34,9 @@
 [submodule "telemetry_db"]
 	path = telemetry_db
 	url = https://github.com/network-automation-projects/telemetry_db.git
+[submodule "automation-failure-simulator"]
+	path = automation-failure-simulator
+	url = https://github.com/rclarke009/automation-failure-simulator.git
+[submodule "automation-preflight"]
+	path = automation-preflight
+	url = https://github.com/rclarke009/automation-preflight.git
