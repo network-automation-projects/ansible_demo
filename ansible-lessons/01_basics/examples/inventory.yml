@@ -1,0 +1,5 @@
+# Minimal inventory for 01_basics (localhost only; no real servers).
+all:
+  hosts:
+    localhost:
+      ansible_connection: local

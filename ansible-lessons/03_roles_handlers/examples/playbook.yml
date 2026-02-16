@@ -1,0 +1,8 @@
+---
+# Use the hello role (03_roles_handlers).
+- name: Run hello role
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - role: hello
+      # roles/hello is relative to playbook or roles_path

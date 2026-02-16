@@ -1,0 +1,25 @@
+---
+# Playbook demonstrating vars, loop, and when (02_playbooks_variables).
+- name: Variables and loops
+  hosts: localhost
+  gather_facts: false
+  vars:
+    greeting: "Hello from Ansible"
+    items:
+      - one
+      - two
+      - three
+  tasks:
+    - name: Show variable
+      ansible.builtin.debug:
+        msg: "{{ greeting }}"
+
+    - name: Loop over items
+      ansible.builtin.debug:
+        msg: "Item: {{ item }}"
+      loop: "{{ items }}"
+
+    - name: Conditional task (run when run_extra is true)
+      ansible.builtin.debug:
+        msg: "Extra step ran"
+      when: run_extra | default(false) | bool

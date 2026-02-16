@@ -67,3 +67,14 @@ These are for **practical / automation-style** interviews. No computer-science p
 | Prometheus metrics exposition | Expose Counter/Gauge/Histogram, generate /metrics, parse exposition format. | [prometheus_metrics_exposition/](prometheus_metrics_exposition/) |
 | Prometheus query client | Query /api/v1/query, parse JSON result (metric name, labels, value). | [prometheus_query_client/](prometheus_query_client/) |
 | Grafana dashboard PromQL parser | Extract panel titles and PromQL expressions from dashboard JSON. | [grafana_dashboard_promql/](grafana_dashboard_promql/) |
+| Debug retry never succeeds | Figure out why retry-with-backoff never succeeds on retry. | [debug_retry_never_succeeds/](debug_retry_never_succeeds/) |
+| Debug logs connection refused | Error logs show connection refused; report says success. Why? | [debug_logs_connection_refused/](debug_logs_connection_refused/) |
+| Debug mutable default | Second run includes devices from first run. Why? | [debug_mutable_default/](debug_mutable_default/) |
+| Debug results misalignment | router-2 shows router-3's data when one device fails. Why? | [debug_results_misalignment/](debug_results_misalignment/) |
+| Debug config not found | Works from script dir, fails from project root. Why? | [debug_config_not_found/](debug_config_not_found/) |
+| Debug Netmiko timeout crash | Script crashes on device timeout instead of recording failure. | [debug_netmiko_timeout_crash/](debug_netmiko_timeout_crash/) |
+| Debug Netmiko bad parsing | Wrong status/protocol when parsing "show ip int brief". | [debug_netmiko_bad_parsing/](debug_netmiko_bad_parsing/) |
+| Debug Netmiko race condition | Wrong or inconsistent results when running devices in parallel. | [debug_netmiko_race_condition/](debug_netmiko_race_condition/) |
+| Debug Netmiko insecure credentials | Code review: find and fix credential exposure. | [debug_netmiko_insecure_credentials/](debug_netmiko_insecure_credentials/) |
+
+For a grouped **Netmiko/NAPALM debugging lesson** (four challenges in suggested order), see [DEBUG_NETMIKO_NAPALM_LESSON.md](DEBUG_NETMIKO_NAPALM_LESSON.md).

@@ -1,0 +1,2 @@
+# Ansible for ansible-lessons (use a venv if you prefer)
+ansible-core>=2.14.0

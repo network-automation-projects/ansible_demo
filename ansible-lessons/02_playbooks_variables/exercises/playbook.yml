@@ -1,0 +1,19 @@
+---
+# TODO: Add vars, loop, when (see exercises/README.md)
+- name: Variables and loops exercise
+  hosts: localhost
+  gather_facts: false
+  vars:
+    greeting: "Edit me"
+  tasks:
+    - name: Show greeting
+      ansible.builtin.debug:
+        msg: "{{ greeting }}"
+
+    - name: Loop example
+      ansible.builtin.debug:
+        msg: "{{ item }}"
+      loop:
+        - first
+        - second
+        - third

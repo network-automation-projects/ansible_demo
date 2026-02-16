@@ -1,0 +1,12 @@
+---
+# Minimal playbook: ping and debug (01_basics).
+- name: Ping and show message
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Ping
+      ansible.builtin.ping:
+
+    - name: Show message
+      ansible.builtin.debug:
+        msg: "Ansible basics example ran successfully."

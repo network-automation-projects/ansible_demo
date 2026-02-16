@@ -1,0 +1,33 @@
+# Minimal playbook structure. Copy and adapt for interviews or quick tasks.
+# Usage: ansible-playbook -i inventory.yml ansible_playbook_snippet.yml
+
+---
+- name: Minimal play
+  hosts: localhost
+  vars:
+    app_name: myapp
+    port: 8080
+
+  tasks:
+    - name: Echo a variable
+      ansible.builtin.debug:
+        msg: "Running {{ app_name }} on port {{ port }}"
+      register: echo_result
+
+    - name: Show when condition
+      ansible.builtin.debug:
+        msg: "Echo succeeded"
+      when: echo_result is succeeded
+
+    - name: Loop example
+      ansible.builtin.debug:
+        msg: "Item {{ item }}"
+      loop:
+        - one
+        - two
+      notify: restart example service
+
+  handlers:
+    - name: restart example service
+      ansible.builtin.debug:
+        msg: "Handler: restart example service (replace with service module in real use)"

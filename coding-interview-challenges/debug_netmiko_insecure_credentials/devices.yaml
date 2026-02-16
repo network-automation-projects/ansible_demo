@@ -1,0 +1,7 @@
+# Sample device list. Do NOT commit real credentials.
+# Use env vars NET_USER / NET_PASS or a separate, gitignored file for production.
+devices:
+  - host: 192.168.1.1
+    device_type: cisco_ios
+    username: admin
+    password: admin123

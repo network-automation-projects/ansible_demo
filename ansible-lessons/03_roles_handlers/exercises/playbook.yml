@@ -1,0 +1,7 @@
+---
+# Use the greet role (run from 03_roles_handlers with roles_path including exercises/roles)
+- name: Run greet role
+  hosts: localhost
+  gather_facts: false
+  roles:
+    - role: greet

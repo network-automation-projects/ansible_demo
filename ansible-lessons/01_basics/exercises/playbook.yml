@@ -1,0 +1,12 @@
+---
+# TODO: One play targeting your group; tasks: ping, debug with a message
+- name: My first play
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Ping
+      ansible.builtin.ping:
+
+    - name: Show message
+      ansible.builtin.debug:
+        msg: "Edit this message."

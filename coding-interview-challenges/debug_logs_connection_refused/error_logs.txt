@@ -1,0 +1,7 @@
+ERROR - Connection refused for device core-sw2: Connection refused for device core-sw2
+
+--- Report ---
+router-1: success
+core-sw1: success
+core-sw2: success
+edge-sw1: success

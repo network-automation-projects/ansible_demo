@@ -9,26 +9,36 @@ from pathlib import Path
 def load_config(path: str) -> dict[str, str]:
     """Read key=value file; return dict. Skip comments (#) and blank lines."""
     result = {}
-    # TODO: same as env parser: open, loop lines, strip, skip blank/comment, partition on "=", strip key/value
-    # TODO: handle FileNotFoundError: print message and return {}
+    try:
+        with open(path) as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                key, _, value = line.partition("=")
+                key, value = key.strip(), value.strip()
+                if key:
+                    result[key] = value
+    except FileNotFoundError:
+        print(f"File not found: {path}")
+        return {}
     return result
 
 
 def merge_configs(first: dict[str, str], second: dict[str, str]) -> dict[str, str]:
     """Merge second into first; second wins for overlapping keys. Return new dict."""
-    # TODO: result = dict(first); result.update(second); return result
-    return {}
+    result = dict(first)
+    result.update(second)
+    return result
 
 
 def config_diff(
     a: dict[str, str], b: dict[str, str]
 ) -> tuple[set[str], set[str], set[str]]:
     """Return (only_in_a, only_in_b, keys_in_both_with_different_value)."""
-    only_a = set()
-    only_b = set()
-    different = set()
-    # TODO: only_a = set(a) - set(b); only_b = set(b) - set(a)
-    # TODO: for k in set(a) & set(b): if a[k] != b[k]: different.add(k)
+    only_a = set(a) - set(b)
+    only_b = set(b) - set(a)
+    different = {k for k in set(a) & set(b) if a[k] != b[k]}
     return (only_a, only_b, different)
 
 

@@ -33,7 +33,6 @@ PROBLEM DESCRIPTIONS (what you're trying to accomplish)
 --------------------------------------------------------------------------------
 """
 
-from logging import raiseExceptions
 from typing import Any, Callable, TypeVar
 
 T = TypeVar("T")

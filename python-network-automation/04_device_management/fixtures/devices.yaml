@@ -1,0 +1,13 @@
+# Device inventory for interview_tasks. Use empty list for mock-only (USE_FIXTURES=1).
+# For real runs, add device entries with host/hostname, username, password, device_type/driver.
+devices: []
+# Example (do not commit real credentials):
+# devices:
+#   - host: 10.0.0.1
+#     username: admin
+#     password: secret
+#     device_type: cisco_ios
+#   - hostname: 10.0.0.2
+#     username: admin
+#     password: secret
+#     driver: ios

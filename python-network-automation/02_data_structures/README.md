@@ -18,6 +18,17 @@ By completing this module, you will learn:
 - Module 01: Core Fundamentals
 - Understanding of basic Python collections (list, dict, tuple)
 
+## Lists & Dictionaries Practice (Basics → Advanced)
+
+If you want focused practice on **lists and dicts** before or alongside this module, use `lists_dicts_practice.py`. It covers:
+
+- **Part 1 — List basics:** indexing, slicing, append/extend, `in`/`not in`, building lists from ranges
+- **Part 2 — Dict basics:** creation, `.get()`, `.setdefault()`, `.keys()`/`.values()`/`.items()`, building dicts from lists
+- **Part 3 — Intermediate:** list of dicts, list/dict comprehensions, filtering, merging configs
+- **Part 4 — Advanced:** nested dicts, safe nested access, flattening, grouping, sorting, inverting mappings
+
+Complete the TODO sections and uncomment the test block at the bottom to verify. Good preparation for network automation interviews and day-to-day scripting. **Answers:** `lists_dicts_practice_answers.py` (run it to confirm all tests pass).
+
 ## Concepts Covered
 
 ### collections.defaultdict
@@ -80,7 +91,12 @@ By completing this module, you will learn:
 
 ## Exercises
 
-Work through `exercises.py` to practice these concepts with fill-in-the-blank exercises.
+- **`lists_dicts_practice.py`** — Lists and dictionaries from basics to advanced (optional refresher or prep).
+- **`basic_practice.py`** — Sets (dedupe, intersection, union, add/discard) and simple file I/O (read/write/append with pathlib). **Answers:** `basic_practice_answers.py`.
+- **`exercises.py`** — Fill-in-the-blank exercises for defaultdict, namedtuple, Counter, deque, OrderedDict, and copy.
+- **`exercises-loops.py`** — Practice for loops: nested loops, `while` (retry), and loop control (`break`/`continue`) in a network automation context.
+- **`exercises_classes.py`** — Practice writing classes: `__init__` and attributes, instance methods, a class that holds a collection, `__str__`, and a small class from scratch (Device, Interface). **Answers:** `exercises_classes_answers.py`.
+- **`exercises_dataclasses.py`** — Practice with `@dataclass`, `field(default_factory=...)`, `replace()`, `asdict()`, and when to use dataclasses vs Pydantic. **Answers:** `exercises_dataclasses_answers.py`.
 
 ## Examples
 

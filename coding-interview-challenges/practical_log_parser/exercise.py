@@ -9,17 +9,32 @@ from typing import Any
 
 def parse_log_line(line: str) -> dict[str, str] | None:
     """Parse one line into {timestamp, level, message}. Return None for blank/invalid."""
-    # TODO: strip line; if empty, return None
-    # TODO: split (e.g. first two parts = date and time, next = level, rest = message)
-    # TODO: if not enough parts, return None or dict with level "UNKNOWN"
-    return None
+    line = line.strip()
+    if not line:
+        return None
+    parts = line.split(None, 3)
+    if len(parts) < 4:
+        return {"timestamp": "", "level": "UNKNOWN", "message": line}
+    date, time_, level, message = parts
+    return {
+        "timestamp": f"{date} {time_}",
+        "level": level,
+        "message": message,
+    }
 
 
 def load_log(path: str) -> list[dict[str, str]]:
     """Read log file and return list of parsed records. Skip invalid lines."""
     records = []
-    # TODO: open path, loop over lines, call parse_log_line, append if not None
-    # TODO: handle FileNotFoundError: print message and return []
+    try:
+        with open(path) as f:
+            for line in f:
+                parsed = parse_log_line(line)
+                if parsed is not None:
+                    records.append(parsed)
+    except FileNotFoundError:
+        print(f"File not found: {path}")
+        return []
     return records
 
 
@@ -27,14 +42,16 @@ def filter_by_level(
     records: list[dict[str, str]], level: str
 ) -> list[dict[str, str]]:
     """Return only records where level matches (case-sensitive)."""
-    # TODO: return [r for r in records if r.get("level") == level]
-    return []
+    return [r for r in records if r.get("level") == level]
 
 
 def count_by_level(records: list[dict[str, str]]) -> dict[str, int]:
     """Return dict mapping each level to number of entries."""
-    # TODO: loop over records, increment count per level; return dict
-    return {}
+    counts: dict[str, int] = {}
+    for r in records:
+        lev = r.get("level", "UNKNOWN")
+        counts[lev] = counts.get(lev, 0) + 1
+    return counts
 
 
 def main() -> None:

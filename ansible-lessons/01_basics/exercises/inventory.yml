@@ -1,0 +1,13 @@
+# TODO: Define a group (e.g. myhosts) with localhost, ansible_connection: local
+# Example structure:
+# all:
+#   children:
+#     myhosts:
+#       hosts:
+#         localhost:
+#           ansible_connection: local
+
+all:
+  hosts:
+    localhost:
+      ansible_connection: local

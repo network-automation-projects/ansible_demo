@@ -1,0 +1,10 @@
+---
+- name: Minimal play for Python runner demo
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Ping
+      ansible.builtin.ping:
+    - name: Done
+      ansible.builtin.debug:
+        msg: "Advanced example done."

@@ -1,0 +1,5 @@
+---
+# Minimal hello role (03_roles_handlers).
+- name: Say hello
+  ansible.builtin.debug:
+    msg: "Hello from role 'hello'."

@@ -1,0 +1,5 @@
+# Inventory for 02 (localhost only).
+all:
+  hosts:
+    localhost:
+      ansible_connection: local

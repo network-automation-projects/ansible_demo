@@ -6,9 +6,9 @@ Fill-in-the-blank exercises for learning essential Python built-ins
 in the context of network automation and reliability engineering.
 """
 
-from operator import truediv
-from typing import List, Dict, Any, Optional
+from typing import Any, Dict, List, Optional
 import logging
+from webbrowser import get
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -48,11 +48,9 @@ def validate_all_interfaces_up(interface_statuses: List[str]) -> bool:
         False
     """
     # TODO: Fill in the blank - use all() to check if all statuses equal 'up'
-    if all(status == 'up' for status in interface_statuses):
-        return True
-    else:
-        return False
 
+
+                
 
 def check_for_critical_alerts(alerts: List[Dict[str, Any]]) -> bool:
     """
@@ -70,14 +68,7 @@ def check_for_critical_alerts(alerts: List[Dict[str, Any]]) -> bool:
         True
     """
     # TODO: Fill in the blank - use any() to check if any alert has severity 'critical'
-    for alert in alerts:
-        if alert['severity'] == 'critical':
-            return True
-        else:
-            return False
 
-    #is that the best way to do it?
-    # yes, it is the best way to do it.
 
 
 # ============================================================================
@@ -116,7 +107,7 @@ def calculate_latency_variation(baseline: float, current: float) -> float:
     """
     # TODO: Fill in the blank - use abs() to get absolute difference
 
-    return abs(baseline-current)  # is this correct?
+
     # yes, it is correct.
     # it returns the absolute difference between the baseline and current latency.
     # the abs() function is used to ensure that the difference is always positive.
@@ -173,12 +164,15 @@ def assign_sequential_ips(devices: List[str], base_ip: str) -> Dict[str, str]:
     # Hint: Start enumerate at 1, then format IP as f"{base_ip}{index}"
     result = {}
 
-    for index, device in enumerate(devices, start=1):
-        result[device] = f"{base_ip}{index}"  #so [device] tells the 'type' of what result is?
+
+
+
+
+
         #yes, it tells the 'type' of what result is.
         #the type is a dictionary. a dictionary of devices?
         #yes, it is a dictionary of devices.
-    return result  #so this line returns the result?
+
 
     # for device, device in enumerate(devices, start=1):  # Fill in the blanks # is this correct?
     #     result[device] = f"{base_ip}{device}"  # Fill in the blanks
@@ -192,7 +186,6 @@ def assign_sequential_ips(devices: List[str], base_ip: str) -> Dict[str, str]:
 """
 Tutorial: zip()
 ----------------
-
 zip(*iterables) creates an iterator that aggregates elements from iterables.
 
 In network automation:
@@ -200,8 +193,6 @@ In network automation:
 - Combine multiple data sources
 - Process related data in parallel
 """
-
-
 def pair_devices_with_ips(device_names: List[str], ip_addresses: List[str]) -> List[tuple]:
     """
     Create pairs of device names and IP addresses.
@@ -227,14 +218,8 @@ def pair_devices_with_ips(device_names: List[str], ip_addresses: List[str]) -> L
         [('router1', '10.0.0.1'), ('router2', '10.0.0.2')]
     """
     # TODO: Fill in the blank - use zip() to pair names with IPs
-    return list(zip(device_names,ip_addresses))  # Replace None with zip() call
-    #is this correct?
-    # yes, it is correct.
-    # it returns a list of (device_name, ip_address) tuples.
-    # the device_names are the first values and the ip_addresses are the second values.
-    # the list is a collection of tuples.
-    return list(zip(device_names,ip_addresses))  # Replace None with zip() call
-    #why? because zip() returns an iterator of tuples.
+
+
 
 # ============================================================================
 # EXERCISE 5: Filter for Conditional Selection
@@ -274,8 +259,10 @@ def filter_devices_needing_update(devices: List[Dict[str, Any]], target_version:
     """
     # TODO: Fill in the blank - use filter() with a lambda function
     # Hint: lambda d: d['version'] != target_version
-    return list(None)  # Replace None with filter() call
 
+
+    # or
+    #return [d for d in devices if d["version"] != target_version]
 
 # ============================================================================
 # EXERCISE 6: Map for Transformations
@@ -310,7 +297,7 @@ def extract_device_hostnames(devices: List[Dict[str, Any]]) -> List[str]:
         ['r1', 'r2']
     """
     # TODO: Fill in the blank - use map() with a lambda to extract 'hostname'
-    return list(None)  # Replace None with map() call
+
 
 
 # ============================================================================
@@ -346,7 +333,7 @@ def sort_devices_by_priority(devices: List[Dict[str, Any]]) -> List[Dict[str, An
         [{'name': 'r1', 'priority': 3}, {'name': 'r2', 'priority': 1}]
     """
     # TODO: Fill in the blank - use sorted() with key=lambda and reverse=True
-    return None  # Replace None with sorted() call
+
 
 
 # ============================================================================
@@ -383,8 +370,7 @@ def find_peak_latency(latencies: List[float]) -> float:
         15.2
     """
     # TODO: Fill in the blank - use max() to find peak latency
-    return None  # Replace this line
-
+    return float(max(latencies)) if latencies else 0.0
 
 def calculate_total_bandwidth(bandwidths: List[float]) -> float:
     """
@@ -401,7 +387,8 @@ def calculate_total_bandwidth(bandwidths: List[float]) -> float:
         1200.0
     """
     # TODO: Fill in the blank - use sum() to calculate total
-    return None  # Replace this line
+
+
 
 
 # ============================================================================
@@ -438,7 +425,7 @@ def validate_api_response(response: Any) -> bool:
         False
     """
     # TODO: Fill in the blank - use isinstance() to check if response is dict
-    return None  # Replace this line
+
 
 
 # ============================================================================
@@ -459,7 +446,7 @@ In network automation:
 """
 
 
-def safe_get_device_method(device: Any, method_name: str) -> Optional[callable]:
+def safe_get_device_method(device: Any, method_name: str) -> Optional[Any]:
     """
     Safely get a method from a device object if it exists.
     
@@ -478,9 +465,10 @@ def safe_get_device_method(device: Any, method_name: str) -> Optional[callable]:
         <bound method Device.get_facts...>
     """
     # TODO: Fill in the blank - use hasattr() to check, then getattr() to retrieve
-    if None:  # Check if device has the method
-        return None  # Get the method attribute
-    return None
+
+
+
+
 
 
 # ============================================================================
@@ -518,7 +506,8 @@ def format_bandwidth_report(device_name: str, bandwidth_mbps: float) -> str:
         'Device router1: 1000.50 Mbps'
     """
     # TODO: Fill in the blank - use format() or f-string to format the report
-    return None  # Replace this line
+
+
 
 
 # ============================================================================
@@ -555,7 +544,7 @@ def format_mac_address_as_hex(mac_int: int) -> str:
         '0xffffffffffff'
     """
     # TODO: Fill in the blank - use hex() to convert integer to hex string
-    return None  # Replace this line
+
 
 
 # ============================================================================
@@ -590,8 +579,9 @@ def format_cpu_usage(cpu_percent: float) -> str:
         '45.68%'
     """
     # TODO: Fill in the blank - use round() to round to 2 decimal places
-    rounded = None  # Round cpu_percent to 2 decimal places
-    return f"{rounded}%"  # Format as percentage string
+
+
+
 
 
 # ============================================================================
@@ -627,7 +617,7 @@ def count_interfaces(interface_list: List[str]) -> int:
         3
     """
     # TODO: Fill in the blank - use len() to count interfaces
-    return None  # Replace this line
+
 
 
 def generate_port_numbers(start: int, end: int) -> List[int]:
@@ -646,7 +636,189 @@ def generate_port_numbers(start: int, end: int) -> List[int]:
         [8000, 8001, 8002]
     """
     # TODO: Fill in the blank - use range() and list() to generate port numbers
-    return None  # Replace this line
+    # mylist = []
+    # for i in range(start, end, 1):
+    #     #add to list
+    #     mylist.append(i)
+
+    # return list(mylist)
+
+
+
+
+# ============================================================================
+# EXERCISE 15: Modulo for Bounded, Deterministic Behavior
+# ============================================================================
+
+"""
+Tutorial: Modulo (%)
+--------------------
+
+Modulo gives bounded, repeatable, evenly-distributed behavior instead of
+unbounded growth or special-case logic. Same idea as wrapping from 'z' back to 'a'.
+
+In network automation:
+- Round-robin across devices, NTP servers, or API endpoints
+- Rate-limit or throttle every N operations (avoid API bans, CPU spikes)
+- Shard/partition work across workers without shared state or locks
+- Retry with bounded backoff (fixed list of delays, no index errors)
+- Change batching / rollout windows (clear phases, pause points, rollback boundaries)
+- Stable selection: same device -> same controller every time, even distribution
+
+Interview framing: "Modulo lets me enforce periodic guardrails and keep behavior
+predictable without tracking extra state."
+"""
+
+
+def round_robin_device(devices: List[str], index: int) -> str:
+    """
+    Pick a device by index, wrapping around when index >= len(devices).
+
+    Args:
+        devices: List of device hostnames (e.g. ["r1", "r2", "r3"])
+        index: Arbitrary counter (can grow forever)
+
+    Returns:
+        expression to select the device, wrapping at the end
+
+    Example:
+        >>> round_robin_device(["r1", "r2", "r3"], 0)
+        'r1'
+        >>> round_robin_device(["r1", "r2", "r3"], 5)
+        'r3'
+    """
+    # TODO: Fill in the blank - use index % len(devices) to keep index in range
+
+
+
+
+
+def should_throttle(operation_index: int, every_n: int) -> bool:
+    """
+    Return True when we should pause (e.g. every N operations for rate-limiting).
+
+    Args:
+        operation_index: 0-based index of the current operation
+        every_n: Pause when operation_index is divisible by this (e.g. 10)
+
+    Returns:
+        True when we should pause (e.g. every N operations for rate-limiting).
+
+    Example:
+        >>> should_throttle(10, 10)
+        True
+        >>> should_throttle(11, 10)
+        False
+    """
+    # TODO: Fill in the blank - use modulo to detect every Nth operation
+
+
+
+
+
+def device_belongs_to_worker(
+    device_id: int, worker_id: int, num_workers: int
+) -> bool:
+    """
+    Return True if this worker should process this device when work is split across
+    num_workers (deterministic sharding). Each device is assigned to exactly one
+    worker to give each worker a bucket 0..num_workers-1;
+    this worker should process the device only when that bucket equals worker_id.
+
+    Worker 0 gets devices 0, num_workers, 2*num_workers, ...
+    Worker 1 gets 1, num_workers+1, ...
+    No coordination or shared state needed.
+
+    Args:
+        device_id: Integer device id (e.g. from enumerate or DB id)
+        worker_id: This worker's id (0 to num_workers - 1)
+        num_workers: Total number of workers
+
+    Returns:
+        True if device_id % num_workers == worker_id
+
+    Example:
+        >>> device_belongs_to_worker(6, 2, 4)
+        True
+        >>> device_belongs_to_worker(5, 2, 4)
+        False
+    """
+    # TODO: Fill in the blank with the correct modulo to spread out the workload
+
+
+
+
+
+def backoff_delay_seconds(delays: List[int], attempt: int) -> int:
+    """
+    Return delay in seconds for this attempt, cycling through delays (bounded backoff).
+
+    Args:
+        delays: List of delay values in seconds (e.g. [1, 2, 4, 8])
+        attempt: 0-based attempt number (can be large; no index error)
+
+    Returns:
+        delays[attempt % len(delays)]
+
+    Example:
+        >>> backoff_delay_seconds([1, 2, 4, 8], 0)
+        1
+        >>> backoff_delay_seconds([1, 2, 4, 8], 6)
+        4
+    """
+    # TODO: Fill in the blank - use attempt % len(delays) to index into delays
+
+
+
+
+
+def is_start_of_batch(index: int, batch_size: int) -> bool:
+    """
+    Return True when index starts a new batch (for rollout windows / batching).
+
+    Args:
+        index: 0-based index of current item
+        batch_size: Size of each batch (e.g. 10)
+
+    Returns:
+        True if index % batch_size == 0
+
+    Example:
+        >>> is_start_of_batch(0, 10)
+        True
+        >>> is_start_of_batch(20, 10)
+        True
+        >>> is_start_of_batch(15, 10)
+        False
+    """
+    # TODO: Fill in the blank - use index % batch_size == 0
+
+
+
+
+
+def stable_controller_for_device(
+    controllers: List[str], device_name: str
+) -> str:
+    """
+    Pick a controller for this device deterministically (same device -> same controller).
+
+    Even distribution without stored mapping. In production you might use a
+    stable hash (e.g. consistent hashing) if controller set changes.
+
+    Args:
+        controllers: List of controller hostnames
+        device_name: Device identifier (e.g. hostname)
+
+    Returns:
+        controllers[hash(device_name) % len(controllers)]
+
+    Example:
+        >>> stable_controller_for_device(["ctrl1", "ctrl2"], "router1")
+        'ctrl1' or 'ctrl2' (deterministic for same router1)
+    """
+    # TODO: Fill in the blank - use hash(device_name) % len(controllers)
+
 
 
 # ============================================================================
@@ -735,6 +907,21 @@ if __name__ == "__main__":
     # Test Exercise 14
     # print("\nExercise 14: len() and range()")
     # print(count_interfaces(['Eth0', 'Eth1', 'Eth2']))  # Should be 3
-    # print(generate_port_numbers(8000, 8003))  # Should be [8000, 8001, 8002]
-    
+    print(generate_port_numbers(8000, 8003))  # Should be [8000, 8001, 8002]
+
+    # Test Exercise 15
+    # print("\nExercise 15: Modulo")
+    # print(round_robin_device(["r1", "r2", "r3"], 0))   # Should be r1
+    # print(round_robin_device(["r1", "r2", "r3"], 5))   # Should be r3
+    # print(should_throttle(10, 10))   # Should be True
+    # print(should_throttle(11, 10))   # Should be False
+    # print(device_belongs_to_worker(6, 2, 4))   # Should be True
+    # print(device_belongs_to_worker(5, 2, 4))   # Should be False
+    # print(backoff_delay_seconds([1, 2, 4, 8], 0))   # Should be 1
+    # print(backoff_delay_seconds([1, 2, 4, 8], 6))   # Should be 4
+    # print(is_start_of_batch(0, 10))   # Should be True
+    # print(is_start_of_batch(20, 10))   # Should be True
+    # print(is_start_of_batch(15, 10))   # Should be False
+    # print(stable_controller_for_device(["ctrl1", "ctrl2"], "router1"))  # Deterministic
+
     print("\nUncomment test cases above to verify your solutions!")

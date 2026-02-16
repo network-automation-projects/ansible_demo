@@ -23,3 +23,4 @@
 ## Notes
 - Prefer small, composable scripts over large frameworks
 - No Cursor or Copilot rules detected at repo root
+- Lesson series: **ansible-lessons/** and **terraform-lessons/** (beginner→advanced); **python-network-automation/** (includes 12b Pydantic); **python-fluency-drills/** (20 drills, intermediate→advanced)

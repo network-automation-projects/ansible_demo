@@ -21,6 +21,16 @@ This tutorial is organized into 12 modules, each focusing on a specific use case
 
 **Prerequisites:** Basic Python knowledge
 
+### Module 01b: Error Handling
+**Focus:** Exception handling for reliable automation
+- try/except/else/finally and when each runs
+- Catching specific exceptions; avoid bare except
+- Re-raising and logging in handlers
+- Per-device handling so one failure does not kill the batch
+- Fail fast with clear messages
+
+**Prerequisites:** Module 01
+
 ### Module 02: Data Structures
 **Focus:** Advanced collections for managing network device data
 - Defaultdict for grouping operations
@@ -29,6 +39,14 @@ This tutorial is organized into 12 modules, each focusing on a specific use case
 - Deques for buffering
 
 **Prerequisites:** Module 01
+
+### Module 02b: Objects and Special Methods (Dunders)
+**Focus:** Python's data model and double-underscore methods
+- `__repr__` and `__str__` for logging and display
+- `__len__`, `__getitem__`, `__iter__` for container-like types
+- `__eq__` for value equality; `__call__` and context managers
+
+**Prerequisites:** Module 01 (Module 02 helpful)
 
 ### Module 03: File I/O Operations
 **Focus:** Reading and writing configs, logs, and state files
@@ -65,6 +83,15 @@ This tutorial is organized into 12 modules, each focusing on a specific use case
 - CLI argument parsing
 
 **Prerequisites:** Modules 01-03
+
+### Module 06b: Pattern Detection Tools
+**Focus:** Deriving parsing patterns for code challenges and device output
+- When to use regex vs line/column parsing vs templates
+- Step-by-step process: shape → method → pattern → edge cases
+- Interview-style exercises (log parsing, table parsing, extract fields)
+- LESSON_derive_patterns.md and examples with thought process
+
+**Prerequisites:** Module 06 (Module 01, 03)
 
 ### Module 07: Monitoring & Observability
 **Focus:** Logging, metrics, and observability
@@ -119,6 +146,14 @@ This tutorial is organized into 12 modules, each focusing on a specific use case
 - Database operations (SQLAlchemy)
 
 **Prerequisites:** All previous modules
+
+### Module 12b: Data Validation with Pydantic
+**Focus:** Pydantic from beginner to advanced
+- BaseModel, Field, ValidationError; model_dump / model_validate
+- Nested models, field_validator, model_validator
+- BaseSettings for config; ValidationReport-style patterns
+
+**Prerequisites:** Module 01 (Module 02 or 02b helpful)
 
 ## Setup
 
@@ -207,6 +242,13 @@ Each module includes examples based on real network automation scenarios:
 - **Compliance checking** - Validating configurations
 - **Incident response** - Automated troubleshooting
 - **Inventory management** - Source of truth integration
+
+## Related Projects
+
+For infrastructure-as-code and tooling practice in the same repo:
+
+- **ansible-lessons/** — Beginner-to-advanced Ansible (inventory, playbooks, roles, Vault, Python driver)
+- **terraform-lessons/** — Beginner-to-advanced Terraform (HCL, state, modules, Python integration)
 
 ## Contributing
 

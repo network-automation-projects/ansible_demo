@@ -9,21 +9,44 @@ from typing import Any
 
 import yaml
 
+try:
+    from netmiko import (
+        ConnectHandler,
+        NetmikoAuthenticationException,
+        NetmikoTimeoutException,
+    )
+except ImportError:
+    ConnectHandler = None
+    NetmikoTimeoutException = Exception
+    NetmikoAuthenticationException = Exception
+
 
 def build_netmiko_params(device: dict[str, Any]) -> dict[str, Any]:
     """Convert inventory device dict to ConnectHandler kwargs (host, device_type, username, password, secret, port)."""
-    # TODO: params = {"device_type": device["device_type"], "host": device["ip"]}
-    # TODO: username = device.get("username") or os.environ.get("NET_USER", "")
-    # TODO: password = device.get("password") or os.environ.get("NET_PASS", "")
-    # TODO: add secret if device has it; add port if device has it
-    raise NotImplementedError("TODO: implement build_netmiko_params")
+    params: dict[str, Any] = {
+        "device_type": device["device_type"],
+        "host": device["ip"],
+        "username": device.get("username") or os.environ.get("NET_USER", ""),
+        "password": device.get("password") or os.environ.get("NET_PASS", ""),
+    }
+    if device.get("secret"):
+        params["secret"] = device["secret"]
+    if device.get("port"):
+        params["port"] = device["port"]
+    return params
 
 
 def get_show_version_command(device_type: str) -> str:
     """Map device_type to vendor-specific 'show version' command."""
-    # TODO: mapping for cisco_ios, cisco_nxos, cisco_xr, juniper_junos, arista_eos, nokia_srl
-    # TODO: nokia_srl uses "show system information"; juniper uses "show version"; rest use "show version"
-    raise NotImplementedError("TODO: implement get_show_version_command")
+    mapping = {
+        "cisco_ios": "show version",
+        "cisco_nxos": "show version",
+        "cisco_xr": "show version",
+        "juniper_junos": "show version",
+        "arista_eos": "show version",
+        "nokia_srl": "show system information",
+    }
+    return mapping.get(device_type, "show version")
 
 
 def run_command(
@@ -33,14 +56,28 @@ def run_command(
     connect_func: Any = None,
 ) -> str | None:
     """Connect (or use connect_func mock), optionally enable, send command. Return output or None on exception."""
-    # TODO: params = build_netmiko_params(device)
-    # TODO: if connect_func: call it as mock - return fixture content for "show version" or similar
-    # TODO: else: from netmiko import ConnectHandler, NetmikoTimeoutException, NetmikoAuthenticationException
-    # TODO:   with ConnectHandler(**params) as conn:
-    # TODO:     if device needs enable (cisco, arista - not juniper, nokia_srl): conn.enable()
-    # TODO:     return conn.send_command(command)
-    # TODO:   except NetmikoTimeoutException, NetmikoAuthenticationException, etc: return None
-    raise NotImplementedError("TODO: implement run_command")
+    params = build_netmiko_params(device)
+    needs_enable = device.get("device_type", "") not in (
+        "juniper_junos",
+        "nokia_srl",
+    )
+
+    if connect_func is not None:
+        with connect_func(params) as conn:
+            if needs_enable:
+                conn.enable()
+            return conn.send_command(command)
+
+    if ConnectHandler is None:
+        return None
+
+    try:
+        with ConnectHandler(**params) as conn:
+            if needs_enable:
+                conn.enable()
+            return conn.send_command(command)
+    except (NetmikoTimeoutException, NetmikoAuthenticationException, Exception):
+        return None
 
 
 def load_devices(inventory_path: Path) -> list[dict[str, Any]]:
@@ -48,6 +85,25 @@ def load_devices(inventory_path: Path) -> list[dict[str, Any]]:
     with open(inventory_path) as f:
         data = yaml.safe_load(f)
     return data.get("devices", [])
+
+
+def _make_mock_conn(fixture_path: Path) -> Any:
+    """Return a connect_func that yields a mock connection returning fixture content."""
+
+    class MockConn:
+        def __enter__(self):
+            return self
+
+        def __exit__(self, *args):
+            pass
+
+        def enable(self):
+            pass
+
+        def send_command(self, cmd: str) -> str:
+            return fixture_path.read_text()
+
+    return lambda params: MockConn()
 
 
 def main() -> None:
@@ -59,17 +115,27 @@ def main() -> None:
     use_mock = os.environ.get("NETMIKO_USE_MOCK", "").strip() == "1" or not devices
 
     if use_mock:
-        # TODO: create mock connect_func that reads fixture_path and returns content
-        # TODO: create a minimal device dict for the mock (e.g. cisco_ios)
-        # TODO: output = run_command(device, get_show_version_command("cisco_ios"), connect_func=mock)
-        pass
+        mock_device: dict[str, Any] = {"ip": "127.0.0.1", "device_type": "cisco_ios"}
+        command = get_show_version_command("cisco_ios")
+        output = run_command(
+            mock_device, command, connect_func=_make_mock_conn(fixture_path)
+        )
+        print("Running in MOCK mode (no real device)")
     else:
-        # TODO: device = devices[0]; command = get_show_version_command(device["device_type"])
-        # TODO: output = run_command(device, command)
-        pass
+        device = devices[0]
+        command = get_show_version_command(device["device_type"])
+        output = run_command(device, command)
+        print(f"Running against {device.get('hostname', device['ip'])}")
 
-    # TODO: print success/failure and first 3 lines of output
-    pass
+    if output is None:
+        print("FAILED: no output (connection or auth error)")
+    else:
+        print("OK")
+        lines = output.strip().splitlines()
+        for line in lines[:5]:
+            print(f"  {line}")
+        if len(lines) > 5:
+            print("  ...")
 
 
 if __name__ == "__main__":
