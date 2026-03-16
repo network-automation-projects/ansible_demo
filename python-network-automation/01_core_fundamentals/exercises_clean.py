@@ -681,7 +681,7 @@ def round_robin_device(devices: List[str], index: int) -> str:
         >>> round_robin_device(["r1", "r2", "r3"], 5)
         'r3'
     """
-    # TODO: Fill in the blank - use index % len(devices) to keep index in range
+    # TODO: Fill in the blank - use ... to keep index in range
 
 
 
@@ -729,7 +729,7 @@ def device_belongs_to_worker(
         num_workers: Total number of workers
 
     Returns:
-        True if device_id % num_workers == worker_id
+        True if ...
 
     Example:
         >>> device_belongs_to_worker(6, 2, 4)
@@ -752,7 +752,7 @@ def backoff_delay_seconds(delays: List[int], attempt: int) -> int:
         attempt: 0-based attempt number (can be large; no index error)
 
     Returns:
-        delays[attempt % len(delays)]
+        ...
 
     Example:
         >>> backoff_delay_seconds([1, 2, 4, 8], 0)
@@ -760,7 +760,7 @@ def backoff_delay_seconds(delays: List[int], attempt: int) -> int:
         >>> backoff_delay_seconds([1, 2, 4, 8], 6)
         4
     """
-    # TODO: Fill in the blank - use attempt % len(delays) to index into delays
+    # TODO: Fill in the blank - use ... to index into delays
 
 
 
@@ -775,7 +775,7 @@ def is_start_of_batch(index: int, batch_size: int) -> bool:
         batch_size: Size of each batch (e.g. 10)
 
     Returns:
-        True if index % batch_size == 0
+        True if ...
 
     Example:
         >>> is_start_of_batch(0, 10)
@@ -785,7 +785,7 @@ def is_start_of_batch(index: int, batch_size: int) -> bool:
         >>> is_start_of_batch(15, 10)
         False
     """
-    # TODO: Fill in the blank - use index % batch_size == 0
+    # TODO: Fill in the blank - use ...
 
 
 
@@ -805,13 +805,13 @@ def stable_controller_for_device(
         device_name: Device identifier (e.g. hostname)
 
     Returns:
-        controllers[hash(device_name) % len(controllers)]
+        string list of controllers
 
     Example:
         >>> stable_controller_for_device(["ctrl1", "ctrl2"], "router1")
         'ctrl1' or 'ctrl2' (deterministic for same router1)
     """
-    # TODO: Fill in the blank - use hash(device_name) % len(controllers)
+    # TODO: Fill in the blank - use ...
 
 
 

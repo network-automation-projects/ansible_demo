@@ -479,3 +479,92 @@ OTHER PRINCIPLES
 2. Principle of Least Astonishment - make the code easy to understand.
 3. Principle of Least Knowledge - only know what is needed to do the job.
 4. Principle of Least Surprise - make the code easy to understand.
+
+#exception handling
+
+nested exception handling
+
+So if you want the outer process to continue even if there was an error, don't re-raise the exception.
+
+Here are the main quirks with nested try/except:
+1. Inner handler runs first
+An exception is handled by the innermost except that matches. If the inner handler catches it and doesn’t re-raise, the outer handler never sees it.
+2. Swallowing exceptions
+If the inner except catches and doesn’t re-raise, the exception is effectively swallowed. The outer except won’t run for that exception. In your worker, the inner except catches job-processing errors and doesn’t re-raise, so the outer loop keeps running.
+3. Re-raising
+Use raise (no argument) in the inner except to re-raise the same exception so the outer handler can catch it. raise e or raise SomeOtherError(...) creates a new exception and can change the traceback.
+4. finally runs regardless
+finally runs whether or not an exception was caught. If finally raises, that new exception replaces the original one, which can hide the real cause.
+5. Order of handlers
+With multiple except clauses, the first matching one wins. Put more specific exceptions before broader ones (e.g. except ValueError before except Exception).
+6. Double logging
+If both inner and outer handlers log and the inner one re-raises, you can log the same error twice. Decide which level should log.
+7. return in except
+If the inner except does return, the function exits immediately. The outer except never runs for that exception.
+
+logger.exception is a shortcut for logger.error(exc_info=True) which will log the exception and the traceback.
+
+
+# File io
+
+from pathlib import Path    # preferred over os.path
+## `os` and `pathlib` — common in network & AI automation
+
+### `os` module
+
+| What | Function | Use |
+|------|----------|-----|
+| Change directory | `os.chdir(path)` | Switch cwd before running scripts or loading configs |
+| Current directory | `os.getcwd()` | Get cwd; build paths relative to it |
+| Environment vars | `os.environ`, `os.getenv(name, default)` | API keys, config paths, feature flags |
+| Join paths | `os.path.join(a, b, ...)` | Cross-platform path building |
+| Dir / base name | `os.path.dirname(path)`, `os.path.basename(path)` | Split directory vs filename |
+| Exists / type | `os.path.exists(path)`, `os.path.isfile(path)`, `os.path.isdir(path)` | Guard before read/write or list |
+| Absolute path | `os.path.abspath(path)` | Resolve relative to cwd |
+| List directory | `os.listdir(path)` | List files/dirs (e.g. configs, logs) |
+| Make dirs | `os.makedirs(path, exist_ok=True)` | Create output dirs (logs, artifacts) |
+| Remove | `os.remove(path)`, `os.rmdir(path)` | Delete file or empty dir |
+| Run command | `os.system(cmd)` | Run shell (prefer `subprocess` when possible) |
+| Separator | `os.path.sep`, `os.sep` | `'/'` vs `'\\'` when needed |
+
+### `pathlib` (`Path`) — preferred for paths
+
+| What | Usage | Use |
+|------|--------|-----|
+| Current dir | `Path.cwd()` | Like `os.getcwd()` but returns a `Path` |
+| Home dir | `Path.home()` | User config / default project dir |
+| Join | `Path("a") / "b" / "file.txt"` or `path / "subdir"` | Clean path building |
+| Parent / name | `path.parent`, `path.name`, `path.stem`, `path.suffix` | Dir, filename, stem, extension |
+| Absolute | `path.resolve()` | Full path (resolves symlinks) |
+| Exists / type | `path.exists()`, `path.is_file()`, `path.is_dir()` | Same checks as `os.path` |
+| Read/write text | `path.read_text()`, `path.write_text(s)` | One-liner file I/O |
+| Read/write bytes | `path.read_bytes()`, `path.write_bytes(b)` | Binaries, pickles |
+| List dir | `path.iterdir()` | Iterator over entries (often `sorted()`) |
+| Glob | `path.glob("*.json")`, `path.rglob("**/*.yaml")` | Find configs, logs, datasets |
+| Make dirs | `path.mkdir(parents=True, exist_ok=True)` | Like `os.makedirs(..., exist_ok=True)` |
+| Remove | `path.unlink()`, `path.rmdir()` | Delete file or empty dir |
+| Rename | `path.rename(new_path)` | Move/rename (e.g. log rotation) |
+
+### Using `Path`: class vs instance
+
+from pathlib import Path
+
+# p = Path  →  p is the class; p.cwd(), p("scripts"), p.home() all work
+# p = Path.cwd()  →  p is the current-directory Path; use p / "config.yaml", p.exists(), etc.
+
+# One-off
+Path.cwd()
+Path.home()
+Path("data") / "logs"
+
+# Short alias for the class
+P = Path
+P.cwd()
+P("output") / "results.json"
+
+# Store current directory
+here = Path.cwd()
+config = here / "config.yaml"
+
+Paths and files: Prefer pathlib: Path.cwd(), / joining, .read_text() / .write_text(), .glob(), .mkdir(parents=True, exist_ok=True).
+Environment / process: Use os: os.environ, os.getenv(); for running commands use subprocess rather than os.system().

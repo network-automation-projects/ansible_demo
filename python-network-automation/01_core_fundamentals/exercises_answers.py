@@ -263,6 +263,13 @@ def backoff_delay_seconds(delays: List[int], attempt: int) -> int:
     """
     return delays[attempt % len(delays)]
 
+    0 % 3 = 0
+    1 % 3 = 1
+    2 % 3 = 2
+    3 % 3 = 0
+    4 % 3 = 1
+    5 % 3 = 2
+
 
 def is_start_of_batch(index: int, batch_size: int) -> bool:
     """
@@ -282,3 +289,111 @@ def stable_controller_for_device(
 
 if __name__ == "__main__":
     print("01_core_fundamentals – answer key (run exercises.py to practice)")
+
+
+
+
+# ============================================================================
+# Test Cases (Uncomment to test your solutions)
+# ============================================================================
+
+if __name__ == "__main__":
+    print("=" * 70)
+    print("CORE FUNDAMENTALS EXERCISES")
+    print("=" * 70)
+    
+    # Test Exercise 1
+    print("\nExercise 1: all() and any()")
+    print(validate_all_interfaces_up(['up', 'up', 'up']))  # Should be True
+    print(validate_all_interfaces_up(['up', 'down', 'up']))  # Should be False
+    alerts = [{'severity': 'warning'}, {'severity': 'critical'}]
+    print(check_for_critical_alerts(alerts))  # Should be True
+    
+    # Test Exercise 2
+    # print("\nExercise 2: abs()")
+    # print(calculate_latency_variation(10.5, 12.3))  # Should be 1.8
+    
+    # Test Exercise 3
+    # print("\nExercise 3: enumerate()")
+    # devices = ['router1', 'router2', 'router3']
+    # print(assign_sequential_ips(devices, '10.0.0.'))
+    # Expected: {'router1': '10.0.0.1', 'router2': '10.0.0.2', 'router3': '10.0.0.3'}
+    
+    # Test Exercise 4
+    # print("\nExercise 4: zip()")
+    # names = ['router1', 'router2']
+    # ips = ['10.0.0.1', '10.0.0.2']
+    # print(pair_devices_with_ips(names, ips))
+    # Expected: [('router1', '10.0.0.1'), ('router2', '10.0.0.2')]
+    
+    # Test Exercise 5
+    # print("\nExercise 5: filter()")
+    # devices = [{'name': 'r1', 'version': '15.1'}, {'name': 'r2', 'version': '15.2'}]
+    # print(filter_devices_needing_update(devices, '15.2'))
+    # Expected: [{'name': 'r1', 'version': '15.1'}]
+    
+    # Test Exercise 6
+    # print("\nExercise 6: map()")
+    # devices = [{'hostname': 'r1'}, {'hostname': 'r2'}]
+    # print(extract_device_hostnames(devices))
+    # Expected: ['r1', 'r2']
+    
+    # Test Exercise 7
+    # print("\nExercise 7: sorted()")
+    # devices = [{'name': 'r1', 'priority': 3}, {'name': 'r2', 'priority': 1}]
+    # print(sort_devices_by_priority(devices))
+    # Expected: [{'name': 'r1', 'priority': 3}, {'name': 'r2', 'priority': 1}]
+    
+    # Test Exercise 8
+    # print("\nExercise 8: min/max/sum()")
+    # print(find_peak_latency([10.5, 12.3, 8.7, 15.2]))  # Should be 15.2
+    # print(calculate_total_bandwidth([100, 1000, 100]))  # Should be 1200.0
+    
+    # Test Exercise 9
+    # print("\nExercise 9: isinstance()")
+    # print(validate_api_response({'status': 'ok'}))  # Should be True
+    # print(validate_api_response('error'))  # Should be False
+    
+    # Test Exercise 10
+    # print("\nExercise 10: hasattr/getattr()")
+    # class Device:
+    #     def get_facts(self): return {}
+    # d = Device()
+    # print(safe_get_device_method(d, 'get_facts') is not None)  # Should be True
+    # print(safe_get_device_method(d, 'nonexistent') is None)  # Should be True
+    
+    # Test Exercise 11
+    # print("\nExercise 11: str/format()")
+    # print(format_bandwidth_report('router1', 1000.5))
+    # Expected: 'Device router1: 1000.50 Mbps'
+    
+    # Test Exercise 12
+    # print("\nExercise 12: hex()")
+    # print(format_mac_address_as_hex(281474976710655))
+    # Expected: '0xffffffffffff'
+    
+    # Test Exercise 13
+    # print("\nExercise 13: round()")
+    # print(format_cpu_usage(45.6789))  # Should be '45.68%'
+    
+    # Test Exercise 14
+    # print("\nExercise 14: len() and range()")
+    # print(count_interfaces(['Eth0', 'Eth1', 'Eth2']))  # Should be 3
+    print(generate_port_numbers(8000, 8003))  # Should be [8000, 8001, 8002]
+
+    # Test Exercise 15
+    # print("\nExercise 15: Modulo")
+    # print(round_robin_device(["r1", "r2", "r3"], 0))   # Should be r1
+    # print(round_robin_device(["r1", "r2", "r3"], 5))   # Should be r3
+    # print(should_throttle(10, 10))   # Should be True
+    # print(should_throttle(11, 10))   # Should be False
+    # print(device_belongs_to_worker(6, 2, 4))   # Should be True
+    # print(device_belongs_to_worker(5, 2, 4))   # Should be False
+    # print(backoff_delay_seconds([1, 2, 4, 8], 0))   # Should be 1
+    # print(backoff_delay_seconds([1, 2, 4, 8], 6))   # Should be 4
+    # print(is_start_of_batch(0, 10))   # Should be True
+    # print(is_start_of_batch(20, 10))   # Should be True
+    # print(is_start_of_batch(15, 10))   # Should be False
+    # print(stable_controller_for_device(["ctrl1", "ctrl2"], "router1"))  # Deterministic
+
+    print("\nUncomment test cases above to verify your solutions!")

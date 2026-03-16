@@ -4,8 +4,10 @@ Use this file to verify your solutions. Same structure as exercises.py with blan
 """
 
 import logging
+from pathlib import Path
 from datetime import datetime, timezone, timedelta
 from typing import Dict, Any
+from prometheus_client import Counter
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -41,12 +43,46 @@ def calculate_uptime(start_time: datetime, end_time: datetime) -> timedelta:
     """Calculate uptime duration."""
     return end_time - start_time
 
+_metric_cache: dict = {}
 
 def create_metric_counter(name: str, description: str):
-    """Create Prometheus counter metric (requires prometheus_client)."""
-    from prometheus_client import Counter
-    return Counter(name, description)
+    """Get or create a Prometheus counter (created once per name)."""
+    if name not in _metric_cache:
+        _metric_cache[name] = Counter(name, description)
+    return _metric_cache[name]
+
+
+def main() -> None:
+    """Demonstrate monitoring/observability helpers in action."""
+    log_path = Path(__file__).parent / "monitoring_demo.log"
+    setup_logging(str(log_path), level="INFO")
+    logger.info("Demo started")
+
+    # Device operations (success and failure)
+    log_device_operation("router-01", "config backup", success=True)
+    log_device_operation("switch-02", "firmware upgrade", success=False)
+
+    # UTC timestamps and uptime
+    start = create_utc_timestamp()
+    # Simulate some work (e.g. a short "operation")
+    end = create_utc_timestamp()
+    uptime = calculate_uptime(start, end)
+    logger.info("Uptime sample: %s", uptime)
+
+    # Prometheus counter (optional; skip if not installed)
+    try:
+        counter = create_metric_counter(
+            "device_operations_total",
+            "Total number of device operations",
+        )
+        counter.inc(3)
+        logger.info("Metric counter created and incremented")
+    except ImportError:
+        logger.info("prometheus_client not installed; skipping metric demo")
+
+    logger.info("Demo finished – check %s for log output", log_path)
+    print("Done. See", log_path, "for log output.")
 
 
 if __name__ == "__main__":
-    print("07_monitoring_observability – answer key (run exercises.py to practice)")
+    main()

@@ -84,3 +84,9 @@ gitlabssh.txt.pub
 .terraform/
 *.tfstate
 *.tfstate.*
+
+# Mock / personal test documents (do not push to GitHub)
+*mock*
+
+# Finelly installer build output
+finelly/installer/output/

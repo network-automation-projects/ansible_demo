@@ -438,3 +438,121 @@ Used when calling APIs with strict rate limits.
 | Rate limiting | Respecting API limits  | Custom or ratelimit             |
 
 Retry with exponential backoff is the most widely used pattern, since LLM and API calls are inherently unreliable. Caching and observability are next in importance for cost and debugging.
+
+
+# Decorator Gotcha's
+Since you’re preparing for a live coding challenge for that Network Reliability / automation role, I’ll focus on the ones most likely to be tested.
+1️⃣ The “Forgot to Return the Wrapper” Gotcha
+This is the most common mistake.
+Wrong:
+def my_decorator(func):
+    def wrapper():
+        print("Before")
+        func()
+        print("After")
+    # forgot to return wrapper!
+If you forget return wrapper, the decorated function becomes None.
+Why?
+When Python sees:
+@my_decorator
+def greet():
+    print("Hello")
+It rewrites it as:
+greet = my_decorator(greet)
+If my_decorator returns nothing → greet = None.
+That’s a very common interview trap.
+2️⃣ The Metadata Gotcha (functools.wraps)
+Another big one.
+When you decorate a function, you accidentally overwrite its metadata.
+Example:
+def my_decorator(func):
+    def wrapper(*args, **kwargs):
+        return func(*args, **kwargs)
+    return wrapper
+
+@my_decorator
+def greet():
+    """This says hello"""
+    print("Hello")
+
+print(greet.__name__)
+print(greet.__doc__)
+Output:
+wrapper
+None
+You lose:
+function name
+docstring
+annotations
+etc.
+The Fix
+from functools import wraps
+
+def my_decorator(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        return func(*args, **kwargs)
+    return wrapper
+Now:
+greet
+This says hello
+In interviews, this is often the decorator gotcha they’re looking for.
+3️⃣ The Late Binding / Loop Gotcha
+This one is trickier and sometimes shows up in senior interviews.
+Example:
+decorators = []
+
+for i in range(3):
+    def my_decorator(func):
+        def wrapper():
+            print(i)
+            return func()
+        return wrapper
+    decorators.append(my_decorator)
+All decorators will print 2.
+Why?
+Because Python closures capture variables by reference, not by value.
+Fix:
+for i in range(3):
+    def my_decorator(func, i=i):  # bind i at definition time
+        def wrapper():
+            print(i)
+            return func()
+        return wrapper
+That default argument forces early binding.
+4️⃣ The “Decorator with Arguments” Structure Gotcha
+This one often trips people up in live coding.
+If a decorator takes arguments:
+@retry(times=3)
+def call_api():
+    ...
+It requires three layers:
+def retry(times):
+    def decorator(func):
+        def wrapper(*args, **kwargs):
+            for _ in range(times):
+                try:
+                    return func(*args, **kwargs)
+                except Exception:
+                    pass
+            raise Exception("Failed after retries")
+        return wrapper
+    return decorator
+Common mistake:
+forgetting the extra layer
+mixing up order
+returning the wrong function
+5️⃣ The “Not Passing *args, **kwargs” Gotcha
+If you write:
+def wrapper():
+    return func()
+Your decorator only works for zero-argument functions.
+Interviewers love this one.
+Correct pattern:
+def wrapper(*args, **kwargs):
+    return func(*args, **kwargs)
+
+
+Later, you’ll see an example defining a proper class decorator, namely @singleton, which ensures that there’s only one instance of a class.
+
+?

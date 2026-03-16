@@ -1,0 +1,2 @@
+# Route Optimizer web app (use: pip install -r route-optimizer-requirements.txt)
+flask>=2.3.0
